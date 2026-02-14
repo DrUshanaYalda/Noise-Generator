@@ -1,753 +1,228 @@
-<!doctype html>
-<html lang="en" dir="ltr">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sound Guide</title>
-  <style>
-    :root{
-      --bg:#0b0f14;
-      --card:#111824;
-      --text:#e7eef7;
-      --muted:#9fb0c3;
-      --border:rgba(255,255,255,.10);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:18px;
-      --ok:#7CFFB2;
-      --warn:#ffd166;
-      --bad:#ff6b6b;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Naskh Arabic", "Noto Sans Arabic", sans-serif;
-      background:
-        radial-gradient(1200px 600px at 20% -10%, rgba(110,231,255,.14), transparent),
-        radial-gradient(900px 500px at 90% 10%, rgba(167,139,250,.12), transparent),
-        var(--bg);
-      color:var(--text);
-      padding:16px;
-    }
-    .wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-    header{padding:10px 6px 2px 6px;display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
-    h1{margin:0;font-size:20px}
-    .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35;max-width:640px}
-    .langbtn{
-      width:auto;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(17,24,36,.55);
-      color:var(--text);
-      cursor:pointer;
-      font-weight:850;
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding:14px;
-    }
-    .row{display:flex;gap:12px;flex-wrap:wrap}
-    .col{flex:1 1 260px;display:flex;flex-direction:column;gap:6px}
-    label{font-size:12px;color:var(--muted)}
-    select, button{
-      width:100%;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(17,24,36,.75);
-      color:var(--text);
-      outline:none;
-      font-size:14px;
-    }
-    button{
-      border:none;
-      cursor:pointer;
-      font-weight:900;
-      background: linear-gradient(135deg, rgba(110,231,255,.95), rgba(167,139,250,.95));
-      color:#071018;
-    }
-    button.secondary{
-      background: rgba(17,24,36,.75);
-      border:1px solid var(--border);
-      color:var(--text);
-      font-weight:850;
-    }
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-    .chip{
-      border:1px solid var(--border);
-      background: rgba(17,24,36,.55);
-      padding:10px 12px;
-      border-radius:999px;
-      font-size:13px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .chip.active{
-      border-color: rgba(110,231,255,.65);
-      background: rgba(110,231,255,.10);
-      box-shadow: 0 0 0 3px rgba(110,231,255,.10) inset;
-    }
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      font-size:12px;color:var(--muted);
-      padding:8px 10px;border-radius:999px;border:1px solid var(--border);
-      background: rgba(17,24,36,.55);
-      width:fit-content;
-      margin-top:8px;
-    }
-    .result{display:none;flex-direction:column;gap:10px}
-    .big{display:flex;gap:10px;flex-wrap:wrap}
-    .metric{
-      flex:1 1 220px;
-      background: rgba(17,24,36,.60);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-    }
-    .metric .k{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .metric .v{font-size:20px;font-weight:950}
-    .hint{
-      font-size:13px;line-height:1.5;
-      background: rgba(17,24,36,.55);
-      border:1px dashed rgba(255,255,255,.18);
-      border-radius:16px;
-      padding:12px;
-    }
-    .flag{font-weight:950}
-    .ok{color:var(--ok)}
-    .warn{color:var(--warn)}
-    .bad{color:var(--bad)}
-    .footer{
-      display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-      font-size:12px;color:rgba(159,176,195,.85);
-      text-align:center;padding:6px 8px;
-    }
-    .creator{
-      font-size:11px;
-      opacity:.22;
-      font-weight:500;
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(17,24,36,.18);
-      color: rgba(200,220,245,.75);
-      white-space:nowrap;
-    }
-    details{
-      border:1px solid var(--border);
-      border-radius:16px;
-      background: rgba(17,24,36,.35);
-      padding:10px 12px;
-      margin-top:10px;
-    }
-    summary{cursor:pointer;font-weight:900}
-    .small{font-size:12px;color:var(--muted);line-height:1.45;margin-top:6px}
-    html[dir="rtl"] .chips{justify-content:flex-start}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noise Settings Helper</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#0f141c;
+  color:#e6eef8;
+  padding:20px;
+  max-width:800px;
+  margin:auto;
+}
+h1{font-size:22px}
+.section{margin-bottom:20px}
+select,button{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  margin-bottom:10px;
+  font-size:15px;
+}
+button{
+  background:#4fd1c5;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+.result{
+  background:#1a2330;
+  padding:15px;
+  border-radius:10px;
+  margin-top:20px;
+}
+.warning{
+  background:#3b2f1c;
+  color:#ffd166;
+  padding:10px;
+  border-radius:8px;
+  margin-top:10px;
+}
+.colorBox{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:6px;
+  margin-right:8px;
+}
+.brown{background:#6b4f2a;}
+.pink{background:#b34b8c;}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1 id="t_title">Sound Guide</h1>
-        <div class="sub" id="t_sub">
-          Pick your situation. You’ll get color + Low/High cut for the noise generator app (starter presets).
-        </div>
-        <div class="pill" id="t_quick">Quick: choose → tap “Get settings”.</div>
-      </div>
-      <button class="langbtn" id="btnLang">العربية</button>
-    </header>
 
-    <div class="card">
-      <div class="row">
-        <div class="col">
-          <label id="t_profile">Who is this for?</label>
-          <select id="profile"></select>
-        </div>
-        <div class="col">
-          <label id="t_output">Sound output</label>
-          <select id="output"></select>
-        </div>
-      </div>
+<h1>إعدادات Noise Generator</h1>
+<p>
+هذا الموقع يعطيك الأرقام التي تضعها في تطبيق Noise Generator.<br>
+اختر ما تريد الآن، وستظهر لك الإعدادات المناسبة.
+</p>
 
-      <div class="row" style="margin-top:10px">
-        <div class="col">
-          <label id="t_distance">Distance from ears (if using speaker)</label>
-          <select id="distance"></select>
-          <div class="small" id="t_distanceHint">If headphones are selected, distance is ignored.</div>
-        </div>
-        <div class="col">
-          <label id="t_speech">Need to hear speech?</label>
-          <select id="speech"></select>
-          <div class="small" id="t_speechHint">If “Yes”, we avoid heavy masking.</div>
-        </div>
-      </div>
+<div class="section">
+<label>العمر؟</label>
+<select id="age">
+  <option value="adult">بالغ</option>
+  <option value="older">كبير سن</option>
+  <option value="child">طفل</option>
+  <option value="toddler">طفل صغير</option>
+  <option value="infant">رضيع</option>
+</select>
+</div>
 
-      <div class="row" style="margin-top:10px">
-        <div class="col">
-          <label id="t_sensitivity">Sensitivity today</label>
-          <select id="sensitivity"></select>
-          <div class="small" id="t_sensitivityHint">Use “Sound-sensitive” for nausea, migraine, or overstimulation.</div>
-        </div>
-        <div class="col">
-          <label id="t_sleepMeds">Sleep-affecting medication?</label>
-          <select id="sleepMeds"></select>
-          <div class="small" id="t_sleepMedsHint">Only changes sleep output.</div>
-        </div>
-      </div>
+<div class="section">
+<label>أي جهاز ستستخدم للصوت؟</label>
+<select id="device">
+  <option value="phone">سماعة الهاتف</option>
+  <option value="tablet">سماعة التابلت</option>
+  <option value="external">Bluetooth speaker</option>
+  <option value="headphones">AirPods / headphones</option>
+</select>
+</div>
 
-      <div class="row" style="margin-top:10px">
-        <div class="col">
-          <label id="t_infantPresent">Infant under 1.5 years in the room?</label>
-          <select id="infantPresent"></select>
-          <div class="small" id="t_infantHint">If “Yes”, safety override applies (distance + quiet volume).</div>
-        </div>
-        <div class="col">
-          <label id="t_mode">Pick what you want</label>
-          <div class="chips" id="chips"></div>
-        </div>
-      </div>
+<div class="section">
+<label>المسافة بينك وبين الجهاز؟</label>
+<select id="distance">
+  <option value="near">أقل من 0.5 متر</option>
+  <option value="normal">بين 0.5 و 1.5 متر</option>
+  <option value="far">أكثر من 1.5 متر</option>
+</select>
+</div>
 
-      <div class="row" style="margin-top:10px">
-        <div class="col">
-          <button id="btnGo">Get settings</button>
-        </div>
-        <div class="col">
-          <button class="secondary" id="btnReset">Reset</button>
-        </div>
-      </div>
+<div class="section">
+<label>هل يوجد رضيع أقل من سنة ونصف في نفس الغرفة؟</label>
+<select id="infantRoom">
+  <option value="no">لا</option>
+  <option value="yes">نعم</option>
+</select>
+</div>
 
-      <details>
-        <summary id="t_disclaimerTitle">Medical note (important)</summary>
-        <div class="small" id="t_disclaimer">
-          This tool provides starter presets for a noise app. Evidence-based safety is mainly about loudness and distance (especially for infants).
-          Frequency bands here are practical heuristics (comfort, masking, speaker limits) — not a medical prescription.
-          If anything causes discomfort, lower volume or stop.
-        </div>
-      </details>
-    </div>
+<div class="section">
+<label>اختر ما تريد الآن:</label>
+<select id="mode">
+  <option value="sleep">نوم</option>
+  <option value="relax">راحة وهدوء (Relaxation)</option>
+  <option value="muscle">راحة العضلات</option>
+  <option value="quiet">تهدئة الأفكار</option>
+  <option value="focus">تركيز في العمل</option>
+  <option value="study">دراسة</option>
+  <option value="cook">طبخ</option>
+  <option value="clean">تنظيف أو ترتيب</option>
+  <option value="sew">خياطة أو عمل يدوي</option>
+  <option value="game">ألعاب فيديو</option>
+  <option value="tv">مشاهدة تلفاز</option>
+  <option value="childCalm">تهدئة الطفل</option>
+  <option value="childFocus">مساعدة الطفل على التركيز</option>
+  <option value="childSleep">نوم الطفل</option>
+</select>
+</div>
 
-    <div class="card result" id="result">
-      <div class="big">
-        <div class="metric">
-          <div class="k" id="t_colorK">Color</div>
-          <div class="v" id="outColor">—</div>
-        </div>
-        <div class="metric">
-          <div class="k" id="t_lowK">Low cut</div>
-          <div class="v" id="outLow">—</div>
-        </div>
-        <div class="metric">
-          <div class="k" id="t_highK">High cut</div>
-          <div class="v" id="outHigh">—</div>
-        </div>
-      </div>
+<button onclick="generate()">أعطني الإعدادات</button>
 
-      <div class="hint" id="outAdvice"></div>
-    </div>
-
-    <div class="footer">
-      <span id="t_footer">Keep volume low. If you notice the sound, it’s usually too loud.</span>
-      <span class="creator" id="t_creator">Dr Ushana Yalda</span>
-    </div>
-  </div>
+<div class="result" id="output" style="display:none;"></div>
 
 <script>
-/* ===========================
-   Language pack (EN/AR)
-   =========================== */
-const TXT = {
-  en: {
-    langBtn: "العربية",
-    title: "Sound Guide",
-    sub: "Pick your situation. You’ll get color + Low/High cut for the noise generator app (starter presets).",
-    quick: "Quick: choose → tap “Get settings”.",
-    profile: "Who is this for?",
-    output: "Sound output",
-    distance: "Distance from ears (if using speaker)",
-    distanceHint: "If headphones are selected, distance is ignored.",
-    speech: "Need to hear speech?",
-    speechHint: "If “Yes”, we avoid heavy masking.",
-    sensitivity: "Sensitivity today",
-    sensitivityHint: "Use “Sound-sensitive” for nausea, migraine, or overstimulation.",
-    sleepMeds: "Sleep-affecting medication?",
-    sleepMedsHint: "Only changes sleep output.",
-    infantPresent: "Infant under 1.5 years in the room?",
-    infantHint: "If “Yes”, safety override applies (distance + quiet volume).",
-    mode: "Pick what you want",
-    go: "Get settings",
-    reset: "Reset",
-    disclaimerTitle: "Medical note (important)",
-    disclaimer:
-      "This tool provides starter presets for a noise app. Evidence-based safety is mainly about loudness and distance (especially for infants). " +
-      "Frequency bands here are practical heuristics (comfort, masking, speaker limits) — not a medical prescription. " +
-      "If anything causes discomfort, lower volume or stop.",
-    footer: "Keep volume low. If you notice the sound, it’s usually too loud.",
-    creator: "Dr Ushana Yalda",
 
-    profiles: [
-      ["adult","Adult"],
-      ["older","Older adult (70+)"],
-      ["child","Child (4–12)"],
-      ["toddler","Toddler (2–4)"],
-      ["infant","Infant (under 1.5)"]
-    ],
-    outputs: [
-      ["phone_speaker","Phone speaker"],
-      ["tablet_speaker","Tablet speaker"],
-      ["external_speaker","External speaker"],
-      ["headphones","Headphones / earbuds"]
-    ],
-    distances: [
-      ["near","Near (<0.5 m)"],
-      ["mid","Medium (0.5–1.5 m)"],
-      ["far","Far (>1.5 m)"]
-    ],
-    speechOpts: [
-      ["yes","Yes"],
-      ["no","No"]
-    ],
-    sensOpts: [
-      ["normal","Normal"],
-      ["sound_sensitive","Sound-sensitive (nausea/migraine/overload)"]
-    ],
-    medsOpts: [
-      ["no","No"],
-      ["yes","Yes (sleep only)"]
-    ],
-    infantOpts: [
-      ["no","No"],
-      ["yes","Yes"]
-    ],
-    modes: [
-      ["sleep","Sleep"],
-      ["calm","Calm"],
-      ["focus","Focus (work)"],
-      ["study","Study (steady)"],
-      ["mask","Mask voices"],
-      ["conversation","Conversation (hear speech)"],
-      ["tv","TV (hear dialogue)"],
-      ["body","Feel body more"]
-    ],
+function generate(){
 
-    out: {
-      colorK: "Color",
-      lowK: "Low cut",
-      highK: "High cut",
-      adviceTitle: "Your settings",
-      volume: "Volume",
-      micro: "Micro-adjust",
-      safety: "Safety"
-    }
-  },
+let age = document.getElementById("age").value;
+let device = document.getElementById("device").value;
+let distance = document.getElementById("distance").value;
+let infantRoom = document.getElementById("infantRoom").value;
+let mode = document.getElementById("mode").value;
 
-  ar: {
-    langBtn: "English",
-    title: "دليل الصوت",
-    sub: "اختر الحالة. تحصل على لون الضوضاء + Low/High cut لتطبيق مولّد الضوضاء (إعدادات بداية).",
-    quick: "سريع: اختر → اضغط «أعطني الإعدادات».",
-    profile: "لمن هذا؟",
-    output: "مصدر الصوت",
-    distance: "المسافة عن الأذن (إذا تستخدم سماعة)",
-    distanceHint: "إذا اخترت سماعات/إيربودز، تجاهل المسافة.",
-    speech: "هل تحتاج سماع الكلام؟",
-    speechHint: "إذا «نعم»، نتجنب التمويه الثقيل.",
-    sensitivity: "حساسية اليوم",
-    sensitivityHint: "اختر «حساسية عالية» للغثيان/الصداع/الانزعاج من الصوت.",
-    sleepMeds: "أدوية تؤثر على النوم؟",
-    sleepMedsHint: "تؤثر فقط على إعدادات النوم.",
-    infantPresent: "هل يوجد طفل أقل من 1.5 سنة في الغرفة؟",
-    infantHint: "إذا «نعم»، يتم تطبيق وضع أمان خاص (مسافة + صوت منخفض جدًا).",
-    mode: "اختر ما تريد الآن",
-    go: "أعطني الإعدادات",
-    reset: "إعادة ضبط",
-    disclaimerTitle: "ملاحظة طبية (مهم)",
-    disclaimer:
-      "هذه الأداة تعطي إعدادات بداية لتطبيق الضوضاء. الأمان الطبي يعتمد أساسًا على مستوى الصوت والمسافة (خصوصًا للرضّع). " +
-      "نطاقات التردد هنا هي قواعد عملية (راحة/تمويه/حدود السماعات) وليست وصفة طبية. " +
-      "إذا سبب الصوت انزعاجًا، خفّض الصوت أو توقف.",
-    footer: "اجعل الصوت منخفضًا. إذا لاحظت الصوت بوضوح، غالبًا هو مرتفع.",
-    creator: "د. اوشانا يلده",
+let color="Brown";
+let low=150;
+let high=900;
+let volume="";
+let warning="";
 
-    profiles: [
-      ["adult","بالغ"],
-      ["older","كبير سن (70+)"],
-      ["child","طفل (4–12)"],
-      ["toddler","طفل صغير (2–4)"],
-      ["infant","رضيع (أقل من 1.5)"]
-    ],
-    outputs: [
-      ["phone_speaker","سماعة الهاتف"],
-      ["tablet_speaker","سماعة التابلت"],
-      ["external_speaker","سماعة خارجية"],
-      ["headphones","سماعات/إيربودز"]
-    ],
-    distances: [
-      ["near","قريب (<0.5 م)"],
-      ["mid","متوسط (0.5–1.5 م)"],
-      ["far","بعيد (>1.5 م)"]
-    ],
-    speechOpts: [
-      ["yes","نعم"],
-      ["no","لا"]
-    ],
-    sensOpts: [
-      ["normal","طبيعي"],
-      ["sound_sensitive","حساسية عالية (غثيان/صداع/انزعاج)"]
-    ],
-    medsOpts: [
-      ["no","لا"],
-      ["yes","نعم (للنوم فقط)"]
-    ],
-    infantOpts: [
-      ["no","لا"],
-      ["yes","نعم"]
-    ],
-    modes: [
-      ["sleep","نوم"],
-      ["calm","تهدئة"],
-      ["focus","تركيز (عمل)"],
-      ["study","دراسة (ثابت)"],
-      ["mask","حجب الأصوات"],
-      ["conversation","محادثة (مع سماع الكلام)"],
-      ["tv","تلفاز (سماع الحوار)"],
-      ["body","أشعر بالجسم أكثر"]
-    ],
+// === BASE RANGES ===
 
-    out: {
-      colorK: "اللون",
-      lowK: "Low cut",
-      highK: "High cut",
-      adviceTitle: "إعداداتك",
-      volume: "الصوت",
-      micro: "تعديل سريع",
-      safety: "أمان"
-    }
-  }
+const base = {
+ sleep:        {c:"Brown", l:100, h:700},
+ relax:        {c:"Brown", l:120, h:900},
+ muscle:       {c:"Brown", l:130, h:750},
+ quiet:        {c:"Brown", l:150, h:600},
+ focus:        {c:"Pink",  l:160, h:1500},
+ study:        {c:"Pink",  l:160, h:1300},
+ cook:         {c:"Pink",  l:170, h:1700},
+ clean:        {c:"Pink",  l:180, h:1800},
+ sew:          {c:"Pink",  l:160, h:1300},
+ game:         {c:"Pink",  l:180, h:1800},
+ tv:           {c:"Pink",  l:180, h:1100},
+ childCalm:    {c:"Brown", l:150, h:700},
+ childFocus:   {c:"Pink",  l:170, h:1200},
+ childSleep:   {c:"Brown", l:120, h:600}
 };
 
-let lang = "en";
+color = base[mode].c;
+low = base[mode].l;
+high = base[mode].h;
 
-/* ===========================
-   Engine: safe floors + heuristics
-   =========================== */
+// === DEVICE FLOOR ===
 
-// Conservative device floors for speakers/headphones
-function lowFloor(output){
-  switch(output){
-    case "phone_speaker": return 150;
-    case "tablet_speaker": return 110;
-    case "external_speaker": return 80;
-    case "headphones": return 50;
-    default: return 150;
-  }
+let floor = 150;
+if(device==="tablet") floor=110;
+if(device==="external") floor=80;
+if(device==="headphones") floor=50;
+
+if(low < floor) low = floor;
+
+// === DISTANCE MODIFIER ===
+if(distance==="near") low += 20;
+if(distance==="far") high += 100;
+
+// === INFANT OVERRIDE ===
+if(infantRoom==="yes" || age==="infant"){
+ color="Brown";
+ low=150;
+ high=550;
+ warning = `
+ <div class="warning">
+ تنبيه مهم:<br>
+ الصوت يجب أن يكون منخفض جداً.<br>
+ ضع الجهاز بعيد 1–2 متر.<br>
+ لا تستخدم AirPods للرضيع.
+ </div>`;
 }
 
-// Base presets (heuristic “starter ranges”)
-const BASE = {
-  sleep:        { color:"Brown", low:90,  high:700 },
-  calm:         { color:"Brown", low:120, high:900 },
-  focus:        { color:"Pink",  low:150, high:1600 },
-  study:        { color:"Pink",  low:170, high:1300 },
-  mask:         { color:"Brown", low:120, high:1200 },
-  conversation: { color:"Pink",  low:160, high:1100 },
-  tv:           { color:"Brown", low:200, high:650 },
-  body:         { color:"Brown", low:110, high:800 }
-};
-
-function recommend(inputs){
-  const {profile, output, distance, speech, sensitivity, sleepMeds, infantPresent, mode} = inputs;
-
-  // Start from base
-  let preset = BASE[mode] || BASE.calm;
-  let color = preset.color;
-  let low = preset.low;
-  let high = preset.high;
-
-  // Apply device floor
-  const floor = lowFloor(output);
-  low = Math.max(low, floor);
-
-  // Distance tweaks (speaker only)
-  const isHeadphones = (output === "headphones");
-  if(!isHeadphones){
-    if(distance === "near"){
-      // reduce rumble/distortion risk
-      low = Math.max(low, floor + 20);
-    }
-    if(distance === "far"){
-      // allow slightly more masking if needed
-      high = high + 100;
-    }
-  }
-
-  // Speech constraint (if must hear speech, avoid heavy masking)
-  if(speech === "yes"){
-    high = Math.min(high, 1200);
-    // If someone picked "mask voices" but needs speech, soften it.
-    if(mode === "mask"){
-      color = "Pink";
-      low = Math.max(low, floor);
-      high = Math.min(1100, high);
-    }
-  }
-
-  // Sensitivity (nausea/migraine/overload): reduce hiss/brightness
-  if(sensitivity === "sound_sensitive"){
-    if(color === "Pink"){
-      high = Math.min(high, 900);
-      low = Math.max(low, floor);
-    }else{
-      high = Math.min(high, 900);
-    }
-  }
-
-  // Sleep meds toggle (only modifies sleep)
-  let volumeText = "Barely audible. If you notice it, lower it.";
-  if(mode === "sleep" && sleepMeds === "yes"){
-    high = Math.min(high, 700);
-    volumeText = "Very soft and steady (no sharp or bright sound).";
-  }
-
-  // Profile adjustments
-  if(profile === "older"){
-    // smoother highs; allow slightly stronger volume guidance
-    high = Math.min(high, 900);
-    volumeText = (mode === "sleep") ? "Soft and steady. Start low, then slightly up until comfortable."
-                                    : "Start low, then one small step up if you can’t hear it.";
-  }
-  if(profile === "toddler"){
-    high = Math.min(high, 700);
-    low = Math.max(low, floor);
-    volumeText = "Very low and gentle.";
-  }
-  if(profile === "child"){
-    high = Math.min(high, 1200);
-    low = Math.max(low, floor);
-  }
-
-  // Infant safety override (strongest rule)
-  const safety = [];
-  if(infantPresent === "yes" || profile === "infant"){
-    color = "Brown";
-    low = Math.max(floor, 100);
-    high = 600;
-    volumeText = "Very low. Aim ~≤50 dB at the baby’s position. Keep device ≥1–2 m away.";
-    safety.push("Infant safety mode: distance + low volume are the priority.");
-    safety.push("Do not use headphones/earbuds on infants.");
-  }
-
-  // Clamp sanity
-  if(high - low < 300) high = low + 300;
-
-  // Micro-adjust (single instruction)
-  let micro = "";
-  if(!isHeadphones){
-    micro = "If you hear buzzing/rumble → raise Low cut by 20 Hz.";
-  }else{
-    micro = "If too immersive → raise Low cut by 10–20 Hz or lower volume.";
-  }
-  if(speech === "yes"){
-    micro = "If speech becomes hard to hear → lower volume first, then raise Low cut by 20 Hz.";
-  }
-  if(mode === "sleep" && sensitivity === "sound_sensitive"){
-    micro = "If it keeps you awake → lower High cut by 100 Hz.";
-  }
-
-  return { color, low, high, volumeText, micro, safety };
+// === VOLUME TEXT ===
+if(mode==="sleep" || mode==="childSleep"){
+ volume="اجعل الصوت منخفض جداً. إذا لاحظته بوضوح فهو مرتفع.";
+}
+else if(mode==="childCalm"){
+ volume="منخفض وثابت. لا ترفعه بسرعة.";
+}
+else{
+ volume="منخفض لكن مسموع. لا يغطي الأصوات.";
 }
 
-/* ===========================
-   UI wiring
-   =========================== */
+// === OUTPUT ===
+let colorClass = (color==="Brown")?"brown":"pink";
 
-const el = (id)=>document.getElementById(id);
+document.getElementById("output").style.display="block";
+document.getElementById("output").innerHTML = `
+<h3>الإعدادات التي تضعها في التطبيق:</h3>
+<p><span class="colorBox ${colorClass}"></span> لون الصوت: ${color}</p>
+<p>Low cut: ${low} Hz</p>
+<p>High cut: ${high} Hz</p>
 
-let activeMode = "sleep";
+<h4>مستوى الصوت</h4>
+<p>${volume}</p>
 
-function fillSelect(selectEl, options){
-  selectEl.innerHTML = "";
-  for(const [v,t] of options){
-    const o = document.createElement("option");
-    o.value = v; o.textContent = t;
-    selectEl.appendChild(o);
-  }
+<h4>إذا لم يناسبك:</h4>
+<p>ارفع Low cut قليلاً أو خفّض High cut.</p>
+
+${warning}
+`;
+
 }
 
-function renderChips(){
-  const chips = el("chips");
-  chips.innerHTML = "";
-  for(const [id,label] of TXT[lang].modes){
-    const d = document.createElement("div");
-    d.className = "chip" + (id===activeMode ? " active":"");
-    d.textContent = label;
-    d.onclick = ()=>{ activeMode = id; renderChips(); };
-    chips.appendChild(d);
-  }
-}
-
-function applyLang(){
-  const t = TXT[lang];
-
-  document.documentElement.lang = (lang==="ar" ? "ar":"en");
-  document.documentElement.dir  = (lang==="ar" ? "rtl":"ltr");
-
-  el("btnLang").textContent = t.langBtn;
-  el("t_title").textContent = t.title;
-  el("t_sub").textContent = t.sub;
-  el("t_quick").textContent = t.quick;
-
-  el("t_profile").textContent = t.profile;
-  el("t_output").textContent = t.output;
-  el("t_distance").textContent = t.distance;
-  el("t_distanceHint").textContent = t.distanceHint;
-  el("t_speech").textContent = t.speech;
-  el("t_speechHint").textContent = t.speechHint;
-  el("t_sensitivity").textContent = t.sensitivity;
-  el("t_sensitivityHint").textContent = t.sensitivityHint;
-  el("t_sleepMeds").textContent = t.sleepMeds;
-  el("t_sleepMedsHint").textContent = t.sleepMedsHint;
-  el("t_infantPresent").textContent = t.infantPresent;
-  el("t_infantHint").textContent = t.infantHint;
-  el("t_mode").textContent = t.mode;
-
-  el("btnGo").textContent = t.go;
-  el("btnReset").textContent = t.reset;
-
-  el("t_disclaimerTitle").textContent = t.disclaimerTitle;
-  el("t_disclaimer").textContent = t.disclaimer;
-
-  el("t_colorK").textContent = t.out.colorK;
-  el("t_lowK").textContent = t.out.lowK;
-  el("t_highK").textContent = t.out.highK;
-
-  el("t_footer").textContent = t.footer;
-  el("t_creator").textContent = t.creator;
-
-  // preserve current values if possible
-  const profileVal = el("profile").value || "adult";
-  const outputVal = el("output").value || "phone_speaker";
-  const distanceVal = el("distance").value || "mid";
-  const speechVal = el("speech").value || "yes";
-  const sensVal = el("sensitivity").value || "normal";
-  const medsVal = el("sleepMeds").value || "no";
-  const infantVal = el("infantPresent").value || "no";
-
-  fillSelect(el("profile"), t.profiles); el("profile").value = profileVal;
-  fillSelect(el("output"), t.outputs); el("output").value = outputVal;
-  fillSelect(el("distance"), t.distances); el("distance").value = distanceVal;
-  fillSelect(el("speech"), t.speechOpts); el("speech").value = speechVal;
-  fillSelect(el("sensitivity"), t.sensOpts); el("sensitivity").value = sensVal;
-  fillSelect(el("sleepMeds"), t.medsOpts); el("sleepMeds").value = medsVal;
-  fillSelect(el("infantPresent"), t.infantOpts); el("infantPresent").value = infantVal;
-
-  renderChips();
-}
-
-function show(){
-  const t = TXT[lang].out;
-
-  const inputs = {
-    profile: el("profile").value,
-    output: el("output").value,
-    distance: el("distance").value,
-    speech: el("speech").value,
-    sensitivity: el("sensitivity").value,
-    sleepMeds: el("sleepMeds").value,
-    infantPresent: el("infantPresent").value,
-    mode: activeMode
-  };
-
-  const r = recommend(inputs);
-
-  // Color label translation
-  const colorLabel = (lang==="ar")
-    ? (r.color==="Brown" ? "بني" : "وردي")
-    : r.color;
-
-  el("outColor").textContent = colorLabel;
-  el("outLow").textContent = `${r.low} Hz`;
-  el("outHigh").textContent = `${r.high} Hz`;
-
-  const safetyHtml = r.safety.length
-    ? `<div style="margin-top:10px"><span class="flag warn">${t.safety}:</span><br>• ${r.safety.join("<br>• ")}</div>`
-    : "";
-
-  el("outAdvice").innerHTML = `
-    <div><span class="flag ok">${t.adviceTitle}:</span></div>
-    <div style="margin-top:8px"><span class="flag ok">${t.volume}:</span> ${escapeHtml(r.volumeText)}</div>
-    <div style="margin-top:8px"><span class="flag warn">${t.micro}:</span> ${escapeHtml(r.micro)}</div>
-    ${safetyHtml}
-  `;
-
-  el("result").style.display = "flex";
-
-  // autosave last choices on this device
-  try{
-    localStorage.setItem("soundtool_v1_state", JSON.stringify({lang, activeMode, ...inputs}));
-  }catch(e){}
-}
-
-function resetAll(){
-  activeMode = "sleep";
-  el("profile").value = "adult";
-  el("output").value = "phone_speaker";
-  el("distance").value = "mid";
-  el("speech").value = "yes";
-  el("sensitivity").value = "normal";
-  el("sleepMeds").value = "no";
-  el("infantPresent").value = "no";
-  renderChips();
-  el("result").style.display = "none";
-  try{ localStorage.removeItem("soundtool_v1_state"); }catch(e){}
-}
-
-function escapeHtml(s){
-  return String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#39;");
-}
-
-/* ===========================
-   Events + init
-   =========================== */
-
-el("btnLang").onclick = ()=>{
-  lang = (lang==="en") ? "ar" : "en";
-  applyLang();
-  if(el("result").style.display !== "none") show();
-};
-el("btnGo").onclick = show;
-el("btnReset").onclick = resetAll;
-
-// init + restore last state if present
-(function init(){
-  applyLang();
-  try{
-    const raw = localStorage.getItem("soundtool_v1_state");
-    if(raw){
-      const s = JSON.parse(raw);
-      if(s.lang==="en" || s.lang==="ar") lang = s.lang;
-      applyLang();
-      if(s.activeMode) activeMode = s.activeMode;
-      if(s.profile) el("profile").value = s.profile;
-      if(s.output) el("output").value = s.output;
-      if(s.distance) el("distance").value = s.distance;
-      if(s.speech) el("speech").value = s.speech;
-      if(s.sensitivity) el("sensitivity").value = s.sensitivity;
-      if(s.sleepMeds) el("sleepMeds").value = s.sleepMeds;
-      if(s.infantPresent) el("infantPresent").value = s.infantPresent;
-      renderChips();
-    }
-  }catch(e){}
-})();
 </script>
+
 </body>
 </html>
