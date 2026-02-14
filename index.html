@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Focus Sound Tool</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --card:#111824; --muted:#9fb0c3; --text:#e7eef7;
+      --accent:#6ee7ff; --accent2:#a78bfa; --warn:#ffd166; --bad:#ff6b6b; --good:#7CFFB2;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Naskh Arabic", "Noto Sans Arabic", sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(110,231,255,.18), transparent),
+                  radial-gradient(900px 500px at 90% 10%, rgba(167,139,250,.18), transparent),
+                  var(--bg);
+      color:var(--text);
+      padding:16px;
+    }
+    .wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+    header{display:flex;flex-direction:column;gap:8px;padding:14px 14px 2px 14px;}
+    .topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+    h1{font-size:20px;margin:0}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1 1 230px;display:flex;flex-direction:column;gap:6px}
+    label{font-size:12px;color:var(--muted)}
+    input, select, button{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(17,24,36,.75);
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    input::placeholder{color:rgba(159,176,195,.75)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{
+      border:1px solid var(--border);
+      background: rgba(17,24,36,.55);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      color:var(--text);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .05s ease, border-color .15s ease, background .15s ease;
+    }
+    .chip:active{transform:scale(.98)}
+    .chip.active{
+      border-color: rgba(110,231,255,.65);
+      background: rgba(110,231,255,.10);
+      box-shadow: 0 0 0 3px rgba(110,231,255,.10) inset;
+    }
+    .btn{
+      cursor:pointer;
+      border:none;
+      background: linear-gradient(135deg, rgba(110,231,255,.95), rgba(167,139,250,.95));
+      color:#061018;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .btn.secondary{
+      background: rgba(17,24,36,.75);
+      border:1px solid var(--border);
+      color:var(--text);
+      font-weight:800;
+    }
+    .btn.danger{
+      background: rgba(255,107,107,.14);
+      border:1px solid rgba(255,107,107,.35);
+      color: var(--text);
+      font-weight:900;
+    }
+    .langbtn{
+      width:auto;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(17,24,36,.55);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:850;
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:12px;color:var(--muted);
+      padding:8px 10px;border-radius:999px;border:1px solid var(--border);
+      background: rgba(17,24,36,.55);
+      width:fit-content;
+    }
+    .mini-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .mini-actions button{flex:1 1 240px}
+    .result{display:flex;flex-direction:column;gap:10px;}
+    .big{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .metric{
+      flex:1 1 220px;
+      background: rgba(17,24,36,.60);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+    }
+    .metric .k{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .metric .v{font-size:22px;font-weight:950}
+    .hint{
+      font-size:13px;line-height:1.45;color:var(--text);
+      background: rgba(17,24,36,.55);
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:16px;
+      padding:12px;
+    }
+    details{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background: rgba(17,24,36,.35);
+      padding:10px 12px;
+    }
+    summary{cursor:pointer;color:var(--text);font-weight:950}
+    .small{font-size:12px;color:var(--muted);line-height:1.45}
+    .flag{font-weight:950}
+    .ok{color:var(--good)}
+    .warn{color:var(--warn)}
+    .bad{color:var(--bad)}
+    .footer{font-size:12px;color:rgba(159,176,195,.85);text-align:center;padding:6px 8px;}
+    .steps{
+      margin-top:10px;
+      display:flex;flex-direction:column;gap:8px;
+      background: rgba(17,24,36,.40);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+    }
+    .step{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--text);}
+    .num{
+      min-width:26px;height:26px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      background: rgba(110,231,255,.12);
+      border:1px solid rgba(110,231,255,.25);
+      color:var(--text);
+      font-weight:950;
+      margin-top:1px;
+    }
+    html[dir="rtl"] .step{flex-direction:row-reverse}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="topbar">
+        <div>
+          <h1 id="t_title">Focus Sound Tool</h1>
+          <div class="sub" id="t_sub">Select your situation and get a simple sound range suggestion. Works with the Noise Generator app.</div>
+          <div class="pill" id="t_quickStart" style="margin-top:8px">Quick start: pick an activity → tap “Get my setting”.</div>
+        </div>
+        <button class="langbtn" id="btnLang" aria-label="Toggle language">العربية</button>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="row">
+        <div class="col">
+          <label id="t_nameLabel">Name (optional)</label>
+          <input id="name" placeholder="e.g., Ali / Dalila / Noor" />
+          <div class="small" id="t_nameHint">Tip: add a name so this phone remembers your setup.</div>
+        </div>
+        <div class="col">
+          <label id="t_deviceLabel">Device (optional)</label>
+          <input id="device" placeholder="e.g., iPhone 11 / Xiaomi / Galaxy..." />
+          <div class="small" id="t_deviceHint">Device name is for clarity. The next box drives the advice.</div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <div class="col">
+          <label id="t_setupLabel">Audio setup (this matters)</label>
+          <select id="setup"></select>
+          <div class="pill" id="t_setupPill">Quick rule: headphones = you can go lower 🎧</div>
+        </div>
+
+        <div class="col">
+          <label id="t_colorLabel">Noise color</label>
+          <select id="color"></select>
+          <div class="small" id="t_colorHint">If unsure: choose Brown.</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label id="t_activityLabel">Pick an activity</label>
+        <div class="chips" id="chips"></div>
+        <div class="small" id="t_activityHint" style="margin-top:8px">Choose one. Keep it simple.</div>
+      </div>
+
+      <div class="mini-actions">
+        <button class="btn" id="btnSuggest">Get my setting</button>
+        <button class="btn secondary" id="btnSave">Save my profile</button>
+        <button class="btn danger" id="btnReset">Reset (clear saved)</button>
+      </div>
+
+      <div class="small" id="t_autoSaveNote" style="margin-top:10px">
+        Note: “Get my setting” also auto-saves your last choices on this phone.
+      </div>
+    </div>
+
+    <div class="card result" id="resultCard" style="display:none">
+      <div class="big">
+        <div class="metric">
+          <div class="k" id="t_outLowK">Suggested Low cut</div>
+          <div class="v" id="outLow">—</div>
+        </div>
+        <div class="metric">
+          <div class="k" id="t_outHighK">Suggested High cut</div>
+          <div class="v" id="outHigh">—</div>
+        </div>
+        <div class="metric">
+          <div class="k" id="t_outVolK">Volume hint</div>
+          <div class="v" style="font-size:16px;font-weight:900" id="outVol">—</div>
+        </div>
+      </div>
+
+      <div class="hint" id="outText"></div>
+
+      <details>
+        <summary id="t_testSummary">Test my current settings (optional)</summary>
+        <div class="row" style="margin-top:10px">
+          <div class="col">
+            <label id="t_curLowLabel">My current Low cut</label>
+            <input id="curLow" inputmode="numeric" placeholder="e.g., 120" />
+          </div>
+          <div class="col">
+            <label id="t_curHighLabel">My current High cut</label>
+            <input id="curHigh" inputmode="numeric" placeholder="e.g., 700" />
+          </div>
+        </div>
+        <div class="mini-actions" style="margin-top:10px">
+          <button class="btn secondary" id="btnTest">Analyse my current</button>
+          <button class="btn secondary" id="btnCopy">Copy suggested range</button>
+        </div>
+        <div class="small" id="testOut" style="margin-top:10px"></div>
+      </details>
+    </div>
+
+    <!-- Add to Home Screen -->
+    <div class="card">
+      <div style="font-weight:950" id="t_a2hsTitle">Add to Home Screen</div>
+      <div class="small" id="t_a2hsHint" style="margin-top:6px">Make it one-tap like an app. No login.</div>
+
+      <details style="margin-top:10px">
+        <summary id="t_androidTitle">Android (Chrome / Samsung Internet)</summary>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><div id="t_android1">Open this page in your browser.</div></div>
+          <div class="step"><div class="num">2</div><div id="t_android2">Tap the menu (⋮) or (☰).</div></div>
+          <div class="step"><div class="num">3</div><div id="t_android3"><b>Add to Home screen</b>.</div></div>
+          <div class="step"><div class="num">4</div><div id="t_android4">Confirm. Now it appears like an app icon.</div></div>
+        </div>
+      </details>
+
+      <details style="margin-top:10px">
+        <summary id="t_iphoneTitle">iPhone (Safari)</summary>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><div id="t_iphone1">Open this page in <b>Safari</b> (not inside another app).</div></div>
+          <div class="step"><div class="num">2</div><div id="t_iphone2">Tap the Share icon (□↑).</div></div>
+          <div class="step"><div class="num">3</div><div id="t_iphone3"><b>Add to Home Screen</b>.</div></div>
+          <div class="step"><div class="num">4</div><div id="t_iphone4">Confirm. Now it’s one tap from your home screen.</div></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="footer" id="t_footer">
+      General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.
+    </div>
+  </div>
+
+<script>
+  // -------------------------
+  // i18n
+  // -------------------------
+  const I18N = {
+    en: {
+      langBtn: "العربية",
+      title: "Focus Sound Tool",
+      sub: "Select your situation and get a simple sound range suggestion. Works with the Noise Generator app.",
+      quickStart: "Quick start: pick an activity → tap “Get my setting”.",
+      nameLabel: "Name (optional)",
+      nameHint: "Tip: add a name so this phone remembers your setup.",
+      deviceLabel: "Device (optional)",
+      deviceHint: "Device name is for clarity. The next box drives the advice.",
+      setupLabel: "Audio setup (this matters)",
+      setupPill: "Quick rule: headphones = you can go lower 🎧",
+      colorLabel: "Noise color",
+      colorHint: "If unsure: choose Brown.",
+      activityLabel: "Pick an activity",
+      activityHint: "Choose one. Keep it simple.",
+      btnSuggest: "Get my setting",
+      btnSave: "Save my profile",
+      btnReset: "Reset (clear saved)",
+      autoSaveNote: "Note: “Get my setting” also auto-saves your last choices on this phone.",
+      outLowK: "Suggested Low cut",
+      outHighK: "Suggested High cut",
+      outVolK: "Volume hint",
+      testSummary: "Test my current settings (optional)",
+      curLowLabel: "My current Low cut",
+      curHighLabel: "My current High cut",
+      btnTest: "Analyse my current",
+      btnCopy: "Copy suggested range",
+      footer: "General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.",
+      placeholders: {
+        name: "e.g., Ali / Dalila / Noor",
+        device: "e.g., iPhone 11 / Xiaomi / Galaxy...",
+        curLow: "e.g., 120",
+        curHigh: "e.g., 700"
+      },
+      setupOptions: [
+        ["phone_small", "Phone speaker (small / budget)"],
+        ["phone_good",  "Phone speaker (good / flagship)"],
+        ["tablet",      "Tablet speaker"],
+        ["external",    "External speaker"],
+        ["headphones",  "Headphones / earbuds"]
+      ],
+      colorOptions: [
+        ["brown", "Brown (default, warmer)"],
+        ["pink",  "Pink (slightly brighter)"]
+      ],
+      activities: [
+        ["work","Work"],
+        ["study","Study"],
+        ["picnic","Picnic with family"],
+        ["walk","Walking alone"],
+        ["cooking","Cooking"],
+        ["chores","House chores"],
+        ["meals","Family meal time"],
+        ["tv","Watching TV"],
+        ["sleep","Sleep"],
+        ["relax","Relax"],
+        ["body","Body immersion"]
+      ],
+      savedMsg: "Saved ✅ (on this phone only)",
+      autoSavedMsg: "Saved ✅",
+      resetConfirm: "Reset saved data on this phone? This cannot be undone.",
+      resetDone: "Reset complete ✅",
+      copyFail: (txt)=>`Copy failed. Suggested range: ${txt}`,
+      copiedMsg: (txt)=>`Copied: ${txt}`,
+      errors: {
+        addBoth: "Add both numbers (Low + High) and try again.",
+        highHigher: "High must be higher than Low."
+      },
+      outBlocks: {
+        chosen: "Chosen:",
+        goal: "Goal:",
+        micro: "Micro-adjust:",
+        microFallback: "If it feels wrong, change only one thing: volume first.",
+        rule: "Rule of thumb: if you’re unsure, keep volume lower and don’t chase “perfect.”"
+      },
+      a2hs: {
+        title: "Add to Home Screen",
+        hint: "Make it one-tap like an app. No login.",
+        androidTitle: "Android (Chrome / Samsung Internet)",
+        android1: "Open this page in your browser.",
+        android2: "Tap the menu (⋮) or (☰).",
+        android3: "Tap Add to Home screen.",
+        android4: "Confirm. Now it appears like an app icon.",
+        iphoneTitle: "iPhone (Safari)",
+        iphone1: "Open this page in Safari (not inside another app).",
+        iphone2: "Tap the Share icon (□↑).",
+        iphone3: "Tap Add to Home Screen.",
+        iphone4: "Confirm. Now it’s one tap from your home screen."
+      }
+    },
+    ar: {
+      langBtn: "English",
+      title: "أداة الصوت للتركيز",
+      sub: "اختر الحالة واحصل على اقتراح بسيط لنطاق الصوت. تعمل مع تطبيق مولّد الضوضاء.",
+      quickStart: "بداية سريعة: اختر النشاط → اضغط «أعطني الإعداد».",
+      nameLabel: "الاسم (اختياري)",
+      nameHint: "نصيحة: اكتب اسمًا لكي يتذكر الهاتف إعدادك.",
+      deviceLabel: "الجهاز (اختياري)",
+      deviceHint: "اسم الجهاز للتوضيح فقط. الاختيار التالي هو الذي يحدد الاقتراح.",
+      setupLabel: "طريقة التشغيل (المهمّة)",
+      setupPill: "قاعدة سريعة: السماعات = يمكن خفض التردد أكثر 🎧",
+      colorLabel: "نوع الضوضاء",
+      colorHint: "إذا لم تكن متأكدًا: اختر بني.",
+      activityLabel: "اختر النشاط",
+      activityHint: "اختر واحدًا فقط. خفّفها.",
+      btnSuggest: "أعطني الإعداد",
+      btnSave: "احفظ ملفي",
+      btnReset: "إعادة ضبط (مسح المحفوظ)",
+      autoSaveNote: "ملاحظة: زر «أعطني الإعداد» يحفظ آخر اختياراتك تلقائيًا على هذا الهاتف.",
+      outLowK: "الحدّ الأدنى (Low cut)",
+      outHighK: "الحدّ الأعلى (High cut)",
+      outVolK: "نصيحة للصوت",
+      testSummary: "اختبار إعداداتي الحالية (اختياري)",
+      curLowLabel: "الحدّ الأدنى الحالي",
+      curHighLabel: "الحدّ الأعلى الحالي",
+      btnTest: "حلّل إعداداتي",
+      btnCopy: "انسخ النطاق المقترح",
+      footer: "إرشادات عامة لإعدادات الصوت. إذا سبب أي إعداد انزعاجًا، خفّض الصوت أو توقف.",
+      placeholders: {
+        name: "مثال: علي / دليلة / نور",
+        device: "مثال: iPhone 11 / Xiaomi / Galaxy...",
+        curLow: "مثال: 120",
+        curHigh: "مثال: 700"
+      },
+      setupOptions: [
+        ["phone_small", "سماعة الهاتف (ضعيفة/اقتصادية)"],
+        ["phone_good",  "سماعة الهاتف (جيدة/قوية)"],
+        ["tablet",      "سماعة التابلت"],
+        ["external",    "سماعة خارجية"],
+        ["headphones",  "سماعات/إيربودز"]
+      ],
+      colorOptions: [
+        ["brown", "بني (افتراضي، أدفأ)"],
+        ["pink",  "وردي (أوضح قليلًا)"]
+      ],
+      activities: [
+        ["work","عمل"],
+        ["study","دراسة"],
+        ["picnic","نزهة مع العائلة"],
+        ["walk","مشي لوحدي"],
+        ["cooking","طبخ"],
+        ["chores","أعمال المنزل"],
+        ["meals","وقت الوجبة مع العائلة"],
+        ["tv","مشاهدة التلفاز"],
+        ["sleep","نوم"],
+        ["relax","استرخاء"],
+        ["body","Body immersion"]
+      ],
+      savedMsg: "تم الحفظ ✅ (على هذا الهاتف فقط)",
+      autoSavedMsg: "تم الحفظ ✅",
+      resetConfirm: "هل تريد مسح البيانات المحفوظة على هذا الهاتف؟ لا يمكن التراجع.",
+      resetDone: "تمت إعادة الضبط ✅",
+      copyFail: (txt)=>`فشل النسخ. النطاق المقترح: ${txt}`,
+      copiedMsg: (txt)=>`تم النسخ: ${txt}`,
+      errors: {
+        addBoth: "أدخل الرقمين (Low و High) ثم جرّب مرة أخرى.",
+        highHigher: "يجب أن يكون High أكبر من Low."
+      },
+      outBlocks: {
+        chosen: "تم اختيار:",
+        goal: "الهدف:",
+        micro: "تعديل سريع:",
+        microFallback: "إذا لم يناسبك، غيّر شيئًا واحدًا فقط: خفّض/ارفع الصوت أولًا.",
+        rule: "قاعدة: إذا كنت محتارًا، اجعل الصوت أقل ولا تلاحق “المثالي”."
+      },
+      a2hs: {
+        title: "أضف إلى الشاشة الرئيسية",
+        hint: "اجعلها بنقرة واحدة مثل تطبيق. بدون تسجيل دخول.",
+        androidTitle: "أندرويد (Chrome / Samsung Internet)",
+        android1: "افتح هذه الصفحة في المتصفح.",
+        android2: "اضغط قائمة الخيارات (⋮) أو (☰).",
+        android3: "اضغط إضافة إلى الشاشة الرئيسية.",
+        android4: "أكد. ستظهر أيقونة مثل تطبيق.",
+        iphoneTitle: "آيفون (Safari)",
+        iphone1: "افتح الصفحة في Safari (ليس داخل تطبيق آخر).",
+        iphone2: "اضغط زر المشاركة (□↑).",
+        iphone3: "اضغط إضافة إلى الشاشة الرئيسية.",
+        iphone4: "أكد. تصبح بنقرة واحدة من الشاشة."
+      }
+    }
+  };
+
+  let lang = "en";
+  const $ = (id)=>document.getElementById(id);
+
+  function fillSelect(el, options){
+    el.innerHTML = "";
+    for(const [val, text] of options){
+      const opt = document.createElement("option");
+      opt.value = val;
+      opt.textContent = text;
+      el.appendChild(opt);
+    }
+  }
+
+  // -------------------------
+  // Core recommendation logic
+  // -------------------------
+  const BASE = {
+    work:   { low:120, high:850, vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{
+      en:"Focus + calm. Reduce internal chatter but keep alert.",
+      ar:"تركيز وهدوء. يقلل ضجيج الأفكار مع الحفاظ على اليقظة."
+    }},
+    study:  { low:150, high:700, vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{
+      en:"Sustained focus. Slightly narrower band to stay steady.",
+      ar:"تركيز مستمر. نطاق أضيق قليلًا لثبات أفضل."
+    }},
+    picnic: { low:120, high:950, vol:{en:"Low", ar:"منخفض"}, why:{
+      en:"Soften overstimulation. Keep it gentle so you can still connect.",
+      ar:"يخفف فرط التحفيز. اجعله لطيفًا كي تبقى متصلًا بالناس."
+    }},
+    walk:   { low:130, high:900, vol:{en:"Low", ar:"منخفض"}, why:{
+      en:"Grounded + aware. Not too immersive.",
+      ar:"ثبات مع انتباه. بدون اندماج زائد."
+    }},
+    cooking:{ low:160, high:1000,vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{
+      en:"Rhythm + momentum. Helps you stay engaged without zoning out.",
+      ar:"إيقاع وحركة. يساعدك تبقى حاضر بدون تشتت."
+    }},
+    chores: { low:180, high:1100,vol:{en:"Medium", ar:"متوسط"}, why:{
+      en:"Energy + movement. A bit wider to keep momentum.",
+      ar:"طاقة وحركة. نطاق أوسع قليلًا للاستمرار."
+    }},
+    meals:  { low:140, high:800, vol:{en:"Very low", ar:"منخفض جدًا"}, why:{
+      en:"Buffer triggers. Light background only.",
+      ar:"يخفف المحفزات. خلفية خفيفة فقط."
+    }},
+    tv:     { low:200, high:650, vol:{en:"Very low", ar:"منخفض جدًا"}, why:{
+      en:"Keep dialogue clear. Light thought-softener.",
+      ar:"يحافظ على وضوح الكلام. خلفية خفيفة لتليين التفكير."
+    }},
+    sleep:  { low:90,  high:1200,vol:{en:"Low", ar:"منخفض"}, why:{
+      en:"Mask intermittent noise. Wider band for blocking.",
+      ar:"يحجب الأصوات المتقطعة. نطاق أوسع للتمويه."
+    }},
+    relax:  { low:110, high:950, vol:{en:"Low", ar:"منخفض"}, why:{
+      en:"Decompress. Gentle and supportive.",
+      ar:"تهدئة وتفريغ. لطيف ومريح."
+    }},
+    body:   { low:100, high:700, vol:{en:"Low", ar:"منخفض"}, why:{
+      en:"Less thinking, more presence. Smooth, not too wide.",
+      ar:"تفكير أقل وحضور أكثر. ناعم وليس واسعًا جدًا."
+    }}
+  };
+
+  const SETUP_ADJ = {
+    phone_small: { lowMin:160, lowLift:+30, highClamp:1200 },
+    phone_good:  { lowMin:120, lowLift:+0,  highClamp:1400 },
+    tablet:      { lowMin:110, lowLift:-10, highClamp:1600 },
+    external:    { lowMin:90,  lowLift:-20, highClamp:2000 },
+    headphones:  { lowMin:70,  lowLift:-30, highClamp:3000 }
+  };
+
+  function applyColor(high, color){
+    if(color === "pink") return Math.max(450, Math.round(high * 0.9));
+    return high;
+  }
+
+  function computeSuggestion(activityId, setupId, color){
+    const base = BASE[activityId];
+    const adj = SETUP_ADJ[setupId];
+
+    let low = base.low + adj.lowLift;
+    low = Math.max(low, adj.lowMin);
+
+    let high = Math.min(base.high, adj.highClamp);
+
+    if(high - low < 350) high = low + 350;
+
+    high = applyColor(high, color);
+
+    low = Math.round(low / 10) * 10;
+    high = Math.round(high / 10) * 10;
+
+    if(setupId.startsWith("phone") && low < 120) low = 120;
+    if(setupId === "phone_small" && low < 160) low = 160;
+
+    if(high - low < 350) high = low + 350;
+
+    return { low, high, vol: base.vol[lang], why: base.why[lang] };
+  }
+
+  // -------------------------
+  // UI state/render
+  // -------------------------
+  let activeActivity = "work";
+
+  function renderChips(){
+    const chips = $("chips");
+    chips.innerHTML = "";
+    const acts = I18N[lang].activities;
+    for(const [id, label] of acts){
+      const div = document.createElement("div");
+      div.className = "chip" + (id === activeActivity ? " active" : "");
+      div.textContent = label;
+      div.onclick = () => { activeActivity = id; renderChips(); };
+      chips.appendChild(div);
+    }
+  }
+
+  function applyLang(){
+    const t = I18N[lang];
+
+    document.documentElement.lang = (lang === "ar" ? "ar" : "en");
+    document.documentElement.dir = (lang === "ar" ? "rtl" : "ltr");
+
+    $("btnLang").textContent = t.langBtn;
+
+    $("t_title").textContent = t.title;
+    $("t_sub").textContent = t.sub;
+    $("t_quickStart").textContent = t.quickStart;
+
+    $("t_nameLabel").textContent = t.nameLabel;
+    $("t_nameHint").textContent = t.nameHint;
+    $("t_deviceLabel").textContent = t.deviceLabel;
+    $("t_deviceHint").textContent = t.deviceHint;
+
+    $("t_setupLabel").textContent = t.setupLabel;
+    $("t_setupPill").textContent = t.setupPill;
+
+    $("t_colorLabel").textContent = t.colorLabel;
+    $("t_colorHint").textContent = t.colorHint;
+
+    $("t_activityLabel").textContent = t.activityLabel;
+    $("t_activityHint").textContent = t.activityHint;
+
+    $("btnSuggest").textContent = t.btnSuggest;
+    $("btnSave").textContent = t.btnSave;
+    $("btnReset").textContent = t.btnReset;
+    $("t_autoSaveNote").textContent = t.autoSaveNote;
+
+    $("t_outLowK").textContent = t.outLowK;
+    $("t_outHighK").textContent = t.outHighK;
+    $("t_outVolK").textContent = t.outVolK;
+
+    $("t_testSummary").textContent = t.testSummary;
+    $("t_curLowLabel").textContent = t.curLowLabel;
+    $("t_curHighLabel").textContent = t.curHighLabel;
+    $("btnTest").textContent = t.btnTest;
+    $("btnCopy").textContent = t.btnCopy;
+
+    $("t_footer").textContent = t.footer;
+
+    $("name").placeholder = t.placeholders.name;
+    $("device").placeholder = t.placeholders.device;
+    $("curLow").placeholder = t.placeholders.curLow;
+    $("curHigh").placeholder = t.placeholders.curHigh;
+
+    // selects
+    const setupSel = $("setup");
+    const prevSetup = setupSel.value || "phone_small";
+    fillSelect(setupSel, t.setupOptions);
+    setupSel.value = prevSetup;
+
+    const colorSel = $("color");
+    const prevColor = colorSel.value || "brown";
+    fillSelect(colorSel, t.colorOptions);
+    colorSel.value = prevColor;
+
+    // Add-to-home strings
+    // (kept in the DOM already; no extra IDs here to keep file smaller)
+    renderChips();
+  }
+
+  function showSuggestion({autosave=true} = {}){
+    const setupId = $("setup").value;
+    const color = $("color").value;
+    const s = computeSuggestion(activeActivity, setupId, color);
+
+    $("outLow").textContent = s.low + " Hz";
+    $("outHigh").textContent = s.high + " Hz";
+    $("outVol").textContent = s.vol;
+
+    const t = I18N[lang];
+    const activityLabel = (t.activities.find(x=>x[0]===activeActivity) || ["", ""])[1];
+    const setupLabel = (t.setupOptions.find(x=>x[0]===setupId) || ["", ""])[1];
+    const colorLabel = (t.colorOptions.find(x=>x[0]===color) || ["", ""])[1];
+
+    const miniRules = [];
+    if(setupId === "phone_small"){
+      miniRules.push(lang==="ar"
+        ? "إذا كان الصوت (اهتزاز/ثِقل) أو ضعيفًا → ارفع Low cut بمقدار 20–40 Hz."
+        : "If it feels ‘rumbly’ or weak → raise Low cut by 20–40 Hz."
+      );
+    }
+    if(setupId === "headphones"){
+      miniRules.push(lang==="ar"
+        ? "إذا كان اندماجًا زائدًا → ارفع Low cut بمقدار 10–20 Hz أو اخفض الصوت."
+        : "If it feels too immersive → raise Low cut by 10–20 Hz or lower volume."
+      );
+    }
+    if(activeActivity === "tv"){
+      miniRules.push(lang==="ar"
+        ? "إذا أصبح الكلام غير واضح → اخفض الصوت أولًا، ثم ارفع Low cut بمقدار 20 Hz."
+        : "If dialogue gets hard → lower volume first. Then raise Low cut by 20 Hz."
+      );
+    }
+    if(activeActivity === "sleep"){
+      miniRules.push(lang==="ar"
+        ? "إذا أبقاك مستيقظًا → خفّض High cut بمقدار 100–200 Hz."
+        : "If it keeps you awake → lower High cut by 100–200 Hz."
+      );
+    }
+    if(color === "pink"){
+      miniRules.push(lang==="ar"
+        ? "الوردي قد يبدو أوضح/أحدّ. إذا صار مزعجًا → خفّض High cut بمقدار 100 Hz."
+        : "Pink can feel brighter. If edgy → lower High cut by 100 Hz."
+      );
+    }
+
+    const microHtml = miniRules.length
+      ? "<ul style='margin:6px 0 0 18px;padding:0'>" + miniRules.map(r=>`<li>${r}</li>`).join("") + "</ul>"
+      : t.outBlocks.microFallback;
+
+    $("outText").innerHTML = `
+      <div><span class="flag ok">${t.outBlocks.chosen}</span> <b>${activityLabel}</b> • <span class="flag">${setupLabel}</span> • <span class="flag">${colorLabel}</span></div>
+      <div style="margin-top:8px"><span class="flag ok">${t.outBlocks.goal}</span> ${s.why}</div>
+      <div style="margin-top:8px"><span class="flag warn">${t.outBlocks.micro}</span> ${microHtml}</div>
+      <div style="margin-top:8px" class="small">${t.outBlocks.rule}</div>
+    `;
+
+    $("resultCard").style.display = "flex";
+    $("testOut").textContent = "";
+
+    if(autosave) autoSaveLast();
+  }
+
+  // -------------------------
+  // Storage (no "family")
+  // -------------------------
+  function profileKey(){
+    const n = ($("name").value || "").trim().toLowerCase();
+    return n ? ("soundtool_profile_" + n) : "soundtool_profile_default";
+  }
+
+  function saveProfile(){
+    const t = I18N[lang];
+    const data = {
+      name: $("name").value.trim(),
+      device: $("device").value.trim(),
+      setup: $("setup").value,
+      color: $("color").value,
+      activity: activeActivity,
+      lang: lang,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(profileKey(), JSON.stringify(data));
+    localStorage.setItem("soundtool_last_profile_key", profileKey());
+    alert(t.savedMsg);
+  }
+
+  function autoSaveLast(){
+    // Silent save: last used settings (so they don't need to press Save)
+    const data = {
+      name: $("name").value.trim(),
+      device: $("device").value.trim(),
+      setup: $("setup").value,
+      color: $("color").value,
+      activity: activeActivity,
+      lang: lang,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(profileKey(), JSON.stringify(data));
+    localStorage.setItem("soundtool_last_profile_key", profileKey());
+    // no alert (keeps it calm)
+  }
+
+  function loadProfile(){
+    const lastKey = localStorage.getItem("soundtool_last_profile_key") || "soundtool_profile_default";
+    const raw = localStorage.getItem(lastKey);
+    if(!raw) return;
+    try{
+      const data = JSON.parse(raw);
+      $("name").value = data.name || "";
+      $("device").value = data.device || "";
+      $("setup").value = data.setup || "phone_small";
+      $("color").value = data.color || "brown";
+      activeActivity = data.activity || "work";
+      if(data.lang === "ar" || data.lang === "en") lang = data.lang;
+    }catch(e){}
+  }
+
+  function resetProfile(){
+    const t = I18N[lang];
+    if(!confirm(t.resetConfirm)) return;
+
+    const key = profileKey();
+    localStorage.removeItem(key);
+
+    // If last profile points to this, clear pointer too
+    const lastKey = localStorage.getItem("soundtool_last_profile_key");
+    if(lastKey === key) localStorage.removeItem("soundtool_last_profile_key");
+
+    // Clear fields and return to defaults
+    $("name").value = "";
+    $("device").value = "";
+    $("setup").value = "phone_small";
+    $("color").value = "brown";
+    activeActivity = "work";
+    renderChips();
+
+    // Hide results + clear test
+    $("resultCard").style.display = "none";
+    $("curLow").value = "";
+    $("curHigh").value = "";
+    $("testOut").textContent = "";
+
+    alert(t.resetDone);
+  }
+
+  // -------------------------
+  // Analyse current settings (optional)
+  // -------------------------
+  function toSafeInt(v){
+    // tolerate commas/spaces
+    if(typeof v !== "string") return NaN;
+    const cleaned = v.replace(/[^\d\-]/g, "");
+    const n = parseInt(cleaned, 10);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  function analyseCurrent(){
+    const t = I18N[lang];
+    const s = computeSuggestion(activeActivity, $("setup").value, $("color").value);
+
+    const lo = toSafeInt($("curLow").value);
+    const hi = toSafeInt($("curHigh").value);
+
+    if(Number.isNaN(lo) || Number.isNaN(hi)){
+      $("testOut").innerHTML = `<span class="bad flag">${t.errors.addBoth}</span>`;
+      return;
+    }
+    if(hi <= lo){
+      $("testOut").innerHTML = `<span class="bad flag">${t.errors.highHigher}</span>`;
+      return;
+    }
+
+    const bandwidth = hi - lo;
+    const notes = [];
+    const setupId = $("setup").value;
+
+    if(setupId === "phone_small" && lo < 150){
+      notes.push(lang==="ar"
+        ? `<span class="warn flag">Low cut منخفض جدًا</span> لسماعة هاتف ضعيفة → قد تسمع اهتزاز أو “لا فرق”. جرّب <b>${Math.max(160, lo+20)} Hz</b> أو استخدم المقترح <b>${s.low} Hz</b>.`
+        : `<span class="warn flag">Low cut too low</span> for a small phone speaker → rumble or “no effect”. Try <b>${Math.max(160, lo+20)} Hz</b> or use <b>${s.low} Hz</b>.`
+      );
+    }
+
+    const targetBW = (function(){
+      switch(activeActivity){
+        case "study": return {min:350, max:650};
+        case "work": return {min:350, max:850};
+        case "tv": return {min:250, max:550};
+        case "sleep": return {min:700, max:1400};
+        case "meals": return {min:300, max:700};
+        case "body": return {min:350, max:750};
+        default: return {min:350, max:1100};
+      }
+    })();
+
+    if(bandwidth < targetBW.min){
+      notes.push(lang==="ar"
+        ? `<span class="warn flag">النطاق ضيق</span> (${bandwidth} Hz). وسّع النطاق (ارفع High أو اخفض Low ضمن الحدود).`
+        : `<span class="warn flag">Band too narrow</span> (${bandwidth} Hz). Widen it (raise High or lower Low safely).`
+      );
+    } else if(bandwidth > targetBW.max){
+      notes.push(lang==="ar"
+        ? `<span class="warn flag">النطاق واسع جدًا</span> (${bandwidth} Hz). ضيّقه قليلًا (غالبًا خفّض High).`
+        : `<span class="warn flag">Band very wide</span> (${bandwidth} Hz). Narrow it a bit (often lower High).`
+      );
+    } else {
+      notes.push(lang==="ar"
+        ? `<span class="ok flag">عرض النطاق مناسب</span> لهذا النشاط.`
+        : `<span class="ok flag">Band width looks reasonable</span> for this activity.`
+      );
+    }
+
+    notes.push(lang==="ar"
+      ? `المقترح: <b>${s.low}–${s.high} Hz</b>. إعدادك: <b>${lo}–${hi} Hz</b>.`
+      : `Suggested: <b>${s.low}–${s.high} Hz</b>. You: <b>${lo}–${hi} Hz</b>.`
+    );
+
+    $("testOut").innerHTML = `<div class="small">${notes.map(n=>`• ${n}`).join("<br>")}</div>`;
+  }
+
+  async function copySuggested(){
+    const s = computeSuggestion(activeActivity, $("setup").value, $("color").value);
+    const txt = `${s.low}-${s.high} Hz`;
+    try{
+      await navigator.clipboard.writeText(txt);
+      alert(I18N[lang].copiedMsg(txt));
+    }catch(e){
+      alert(I18N[lang].copyFail(txt));
+    }
+  }
+
+  // -------------------------
+  // Events + init
+  // -------------------------
+  $("btnSuggest").onclick = () => showSuggestion({autosave:true});
+  $("btnSave").onclick = saveProfile;
+  $("btnReset").onclick = resetProfile;
+  $("btnTest").onclick = analyseCurrent;
+  $("btnCopy").onclick = copySuggested;
+
+  $("btnLang").onclick = () => {
+    lang = (lang === "en") ? "ar" : "en";
+    applyLang();
+    // keep output consistent if already visible
+    if($("resultCard").style.display !== "none") showSuggestion({autosave:true});
+  };
+
+  applyLang();
+  loadProfile();
+  applyLang();
+  renderChips();
+</script>
+</body>
+</html>
