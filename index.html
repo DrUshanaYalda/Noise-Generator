@@ -729,11 +729,12 @@
       : t.outBlocks.microFallback;
 
     $("outText").innerHTML = `
-      <div><span class="flag ok">${t.outBlocks.chosen}</span> <b>${activityLabel}</b> • <span class="flag">${setupLabel}</span> • <span class="flag">${colorLabel}</span></div>
-      <div style="margin-top:8px"><span class="flag ok">${t.outBlocks.goal}</span> ${s.why}</div>
-      <div style="margin-top:8px"><span class="flag warn">${t.outBlocks.micro}</span> ${microHtml}</div>
-      <div style="margin-top:8px" class="small">${t.outBlocks.rule}</div>
-    `;
+  <div><span class="flag ok">${t.outBlocks.chosen}</span> <b>${activityLabel}</b> • <span class="flag">${setupLabel}</span> • <span class="flag">${colorLabel}</span></div>
+  <div style="margin-top:8px"><span class="flag ok">${t.outBlocks.goal}</span> ${s.why}</div>
+  <div style="margin-top:8px"><span class="flag warn">${t.outBlocks.micro}</span> ${microHtml}</div>
+  <div style="margin-top:8px" class="small">${t.outBlocks.rule}</div>
+  <div style="margin-top:10px" class="small"><span class="flag ok">${t.signature}</span></div>
+`;
 
     $("resultCard").style.display = "flex";
     $("testOut").textContent = "";
