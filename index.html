@@ -231,6 +231,7 @@
       <button class="langbtn" id="btnLang">English</button>
     </header>
 
+    <!-- Inputs card -->
     <div class="card">
       <div class="row">
         <div class="col">
@@ -307,6 +308,7 @@
       </details>
     </div>
 
+    <!-- Result card -->
     <div class="card result" id="result">
       <div class="big">
         <div class="metric">
@@ -344,6 +346,12 @@
         <div class="warnTitle" id="t_noticeTitle">تنبيه مهم</div>
         <div style="margin-top:6px" id="outNotice"></div>
       </div>
+
+      <!-- Hidden brain explanation (muted, Option B) -->
+      <details id="brainDetails" style="margin-top:10px">
+        <summary id="t_brainTitle">شنو دا يصير بالمخ؟</summary>
+        <div class="small" id="outBrain" style="margin-top:8px"></div>
+      </details>
     </div>
 
     <div class="footer">
@@ -398,6 +406,7 @@ const I18N = {
     adjustTitle: "إذا لم يناسبك:",
     adjustText: "ارفع Low cut قليلاً أو خفّض High cut.",
     noticeTitle: "تنبيه مهم",
+    brainTitle: "شنو دا يصير بالمخ؟",
     footer: "كل خطوة... لنا.",
     creator: "د. اوشانا يلده",
 
@@ -479,23 +488,24 @@ const I18N = {
       infant: "إذا يوجد رضيع: اجعل الصوت منخفض جداً، والجهاز على بعد 1–2 متر، ولا تستخدم AirPods للرضيع."
     },
 
+    /* Sensory volume (final) */
     volumeByGoal: {
-      sleep:        "تخيل الصوت مثل هواء خفيف في الغرفة.<br>لا يضغط عليك ولا يشد انتباهك.",
-      relax:        "تخيل الصوت جزءاً من خلفية المكان.<br>موجود… لكنه لا يطلب انتباهك.",
-      muscle:       "تخيل الصوت يحيط بجسمك برفق.<br>إذا شعرت بثقل في صدرك أو رأسك، خفّضه.",
-      quiet_full:   "اجعل الصوت أهدأ من أفكارك.<br>إذا لاحظته بوضوح، خفّضه قليلاً.",
-      quiet_light:  "ليكن الصوت منظمًا وهادئًا.<br>يساعدك على التركيز دون أن يربكك.",
-      focus:        "ليكن الصوت خلفية ثابتة.<br>يساعدك على الاستمرار دون أن يغطي ما حولك.",
-      study:        "ليكن الصوت ثابتًا ومريحًا.<br>يُبقيك منتبهًا دون إجهاد.",
-      cook:         "الصوت يجب أن يبقيك يقظًا.<br>لا تجعله أعلى من أصوات المطبخ.",
-      clean:        "ليكن الصوت نشيطًا لكن غير مزعج.<br>إذا بدأ يلفت انتباهك، خفّضه.",
-      sew:          "الصوت يجب أن يساعدك على الدقة.<br>إذا أحسست بتوتر، خفّضه.",
-      game_calm:    "ليكن الصوت خلفية فقط.<br>لا يغطي صوت اللعبة.",
-      game_comp:    "الصوت يجب أن يزيد يقظتك بلطف.<br>إذا شعرت بضغط، خفّضه.",
-      tv:           "الصوت يجب أن يبقى خلف الحوار.<br>إذا غطى على الكلام، خفّضه.",
-      childCalm:    "ليكن الصوت لطيفًا كهواء خفيف.<br>لا ترفعه حتى لو لم يهدأ الطفل فورًا.",
-      childFocus:   "منخفض ومعتدل.<br>يجب أن يساعد الطفل دون أن يشتته.",
-      childSleep:   "الصوت يجب أن يكون أهدأ من تنفس الطفل.<br>إذا لاحظته بوضوح، خفّضه.",
+      sleep:         "تخيل الصوت مثل هواء خفيف في الغرفة.<br>لا يضغط عليك ولا يشد انتباهك.",
+      relax:         "تخيل الصوت جزءاً من خلفية المكان.<br>موجود… لكنه لا يطلب انتباهك.",
+      muscle:        "تخيل الصوت يحيط بجسمك برفق.<br>إذا شعرت بثقل في صدرك أو رأسك، خفّضه.",
+      quiet_full:    "اجعل الصوت أهدأ من أفكارك.<br>إذا لاحظته بوضوح، خفّضه قليلاً.",
+      quiet_light:   "ليكن الصوت منظمًا وهادئًا.<br>يساعدك على التركيز دون أن يربكك.",
+      focus:         "ليكن الصوت خلفية ثابتة.<br>يساعدك على الاستمرار دون أن يغطي ما حولك.",
+      study:         "ليكن الصوت ثابتًا ومريحًا.<br>يُبقيك منتبهًا دون إجهاد.",
+      cook:          "الصوت يجب أن يبقيك يقظًا.<br>لا تجعله أعلى من أصوات المطبخ.",
+      clean:         "ليكن الصوت نشيطًا لكن غير مزعج.<br>إذا بدأ يلفت انتباهك، خفّضه.",
+      sew:           "الصوت يجب أن يساعدك على الدقة.<br>إذا أحسست بتوتر، خفّضه.",
+      game_calm:     "ليكن الصوت خلفية فقط.<br>لا يغطي صوت اللعبة.",
+      game_comp:     "الصوت يجب أن يزيد يقظتك بلطف.<br>إذا شعرت بضغط، خفّضه.",
+      tv:            "الصوت يجب أن يبقى خلف الحوار.<br>إذا غطى على الكلام، خفّضه.",
+      childCalm:     "ليكن الصوت لطيفًا كهواء خفيف.<br>لا ترفعه حتى لو لم يهدأ الطفل فورًا.",
+      childFocus:    "منخفض ومعتدل.<br>يجب أن يساعد الطفل دون أن يشتته.",
+      childSleep:    "الصوت يجب أن يكون أهدأ من تنفس الطفل.<br>إذا لاحظته بوضوح، خفّضه.",
       infantOverride:"الصوت يجب أن يكون خفيفًا جدًا.<br>ضع الجهاز بعيدًا 1–2 متر."
     },
 
@@ -527,6 +537,7 @@ const I18N = {
     adjustTitle: "If it doesn’t feel right:",
     adjustText: "Raise Low cut slightly or lower High cut.",
     noticeTitle: "Important notice",
+    brainTitle: "What’s happening in the brain?",
     footer: "Each step… ours.",
     creator: "Dr Ushana Yalda",
 
@@ -608,10 +619,11 @@ const I18N = {
       infant: "If an infant is present: keep volume very low, device 1–2 m away, and do not use AirPods for infants."
     },
 
+    /* Sensory volume (final) */
     volumeByGoal: {
       sleep:         "Imagine it like light air in the room.<br>No pressure. No pulling your attention.",
       relax:         "Let it be part of the background.<br>Present… but not demanding attention.",
-      muscle:        "Let it sit around your body gently.<br>If you feel heaviness, lower it.",
+      muscle:        "Let it sit around your body gently.<br>If it feels heavy, lower it.",
       quiet_full:    "Keep it quieter than your thoughts.<br>If you notice it clearly, lower it slightly.",
       quiet_light:   "Low but steady.<br>It should organize you, not distract you.",
       focus:         "A steady background.<br>Supports focus without covering important sounds.",
@@ -624,11 +636,236 @@ const I18N = {
       tv:            "Behind the dialogue.<br>If it covers speech, lower it.",
       childCalm:     "Gentle like light air.<br>Don’t raise it quickly.",
       childFocus:    "Low and moderate.<br>Helps the child without distraction.",
-      childSleep:    "Quieter than the child’s breathing.<br>If you notice it clearly, lower it.",
+      childSleep:    "Quieter than the child’s breathing.<br>If you clearly notice it, lower it.",
       infantOverride:"Very gentle.<br>Keep device 1–2 m away."
     },
 
     olderExtra: "Start low, then raise one small step if you can’t hear it.<br>Don’t make it loud."
+  }
+};
+
+/* =========================
+   Brain explanations (simplified, non-repetitive)
+   Keys MUST match final goalKey used by engine
+========================= */
+const BRAIN = {
+  ar: {
+    sleep: `• تقل نشاط شبكات اللغة.<br>
+• الجمل الداخلية تتكسر إلى أجزاء.<br>
+• السرد يصير أقصر وأقل ترابط.<br>
+• الصور الذهنية تزيد.<br>
+• السيطرة التنفيذية تنخفض تدريجياً.<br><br>
+هذا طبيعي عند الدخول في النوم.`,
+
+    relax: `• يقل نشاط التوتر (sympathetic).<br>
+• توتر العضلات يقل.<br>
+• الإحساس بالعجلة يضعف.<br>
+• الوعي يبقى حاضر.<br><br>
+تهدئة بدون تخدير.`,
+
+    muscle: `• تقل سيطرة الكلام الداخلي.<br>
+• يزيد الإحساس بالجسم.<br>
+• تقل إشارات الشد الصغير (micro-tension).<br>
+• يقل شد الاستعداد/التصلب.<br><br>
+تأثير grounding جسدي.`,
+
+    quiet_full: `• تقل حلقات الكلام الداخلي المتكرر.<br>
+• تقل الجمل التي تتكوّن داخل الرأس.<br>
+• يقل ربط الأفكار كسلسلة طويلة.<br>
+• تضعف استمرارية الاجترار.<br><br>
+تهدئة معرفية بدون “تبلّد”.`,
+
+    quiet_light: `• تقل القفزات الذهنية المفاجئة.<br>
+• يبقى ترتيب خفيف للأفكار.<br>
+• تتحسن نسبة الإشارة للضجيج.<br>
+• انتباه ثابت لكن معتدل.<br><br>
+وضوح منظم بدون خمول.`,
+
+    focus: `• gating أقوى للانتباه (اختيار ما يهم).<br>
+• يقل اندفاع تبديل المهام.<br>
+• ترتيب الخطوات يصير أوضح.<br>
+• الضجيج الداخلي غير المفيد يقل.<br><br>
+تحكم معرفي منظم.`,
+
+    study: `• تثبيت انتباه بجهد أقل.<br>
+• يقل تبديل السياق داخل الرأس.<br>
+• الذاكرة العاملة تصير أهدأ وأكثر ثبات.<br>
+• يقل القطع الاندفاعي.<br><br>
+تركيز طويل المدى.`,
+
+    conv: `• كلام الطرف الآخر يصير الأولوية.<br>
+• يقل تداخل الكلام الداخلي مع الخارجي.<br>
+• الذاكرة السمعية القصيرة تتحسن.<br>
+• رغبة المقاطعة تقل.<br><br>
+محاذاة الانتباه للحوار.`,
+
+    cook: `• يقظة عملية مع متابعة البيئة.<br>
+• يقل الشرود بين الخطوات.<br>
+• الانتقال بين خطوة وخطوة يصير أثبت.<br>
+• إشراف تنفيذي حاضر.<br><br>
+يقظة وظيفية.`,
+
+    clean: `• يقل التوقف/البدء المتكرر.<br>
+• تسلسل الحركة يصير أطول.<br>
+• إشارات التجنب تقل.<br>
+• التدفق يصير خطي أكثر.<br><br>
+دعم الاستمرارية.`,
+
+    sew: `• تركيز أضيق ودقيق.<br>
+• إشارات الحركة الاندفاعية تقل.<br>
+• تدخل التوتر على الدقة يقل.<br>
+• انتباه ثابت على التفاصيل.<br><br>
+تثبيت الدقة.`,
+
+    game_calm: `• تفاعل انفعالي أقل.<br>
+• الاندفاع يقل.<br>
+• سرعة الاستجابة تبقى لكن بتوازن.<br>
+• إيقاع رد الفعل يصير أهدأ.<br><br>
+تهدئة أثناء اللعب.`,
+
+    game_comp: `• تنشيط أعلى للشبكات اليقظة.<br>
+• استعداد حركي أسرع.<br>
+• تشتيت داخلي أقل.<br>
+• ارتفاع يقظة مضبوط بدون هلع (إذا الصوت معتدل).<br><br>
+دعم الأداء.`,
+
+    tv: `• يقل توليد أفكار جانبية أثناء المشاهدة.<br>
+• تتبع الحوار يصير أسهل.<br>
+• تركيز سمعي أثبت.<br>
+• تحليل زائد أقل.<br><br>
+وضوح سلبي.`,
+
+    childCalm: `• تقل “قفزات المفاجأة” الحسية.<br>
+• المدخل السمعي يصير أكثر ثباتاً.<br>
+• الاندفاع الحركي يقل تدريجياً.<br><br>
+تنظيم بدون تنويم.`,
+
+    childFocus: `• تبديل الانتباه يقل.<br>
+• البقاء على مهمة واحدة يزيد.<br>
+• نشاط شبكات التركيز يتوازن.<br>
+• الاندفاع للانتقال يقل.<br><br>
+دعم انتباه الطفل.`,
+
+    childSleep: `• الاستفزازات السمعية المفاجئة تقل.<br>
+• ردّة الفزع تقل.<br>
+• محفزات تقطع النوم تقل.<br>
+• الانتقال للنوم يصير أسهل.<br><br>
+دعم استمرارية النوم.`,
+
+    infantOverride: `• الهدف أمان وثبات بيئي فقط.<br>
+• لا نريد تحفيز.<br>
+• نقلل التباين الصوتي الحاد.<br>
+• نحافظ على سلامة تطور السمع.<br><br>
+هذا ضبط بيئة فقط.`
+  },
+
+  en: {
+    sleep: `• Language network activity drops.<br>
+• Inner sentences fragment.<br>
+• Narrative becomes shorter/less linked.<br>
+• Imagery increases.<br>
+• Executive control lowers gradually.<br><br>
+Normal sleep-onset physiology.`,
+
+    relax: `• Sympathetic drive decreases.<br>
+• Muscle tone eases.<br>
+• “Urgency” signals weaken.<br>
+• Awareness stays intact.<br><br>
+Calming without sedation.`,
+
+    muscle: `• Verbal dominance reduces.<br>
+• Somatic awareness increases.<br>
+• Micro-tension signaling lowers.<br>
+• Anticipatory bracing reduces.<br><br>
+Sensory grounding.`,
+
+    quiet_full: `• Repetitive inner speech loops weaken.<br>
+• Fewer internally formed sentences.<br>
+• Less chaining of thoughts.<br>
+• Lower rumination persistence.<br><br>
+Cognitive de-escalation.`,
+
+    quiet_light: `• Fewer spontaneous thought jumps.<br>
+• Light executive structure remains.<br>
+• Better signal-to-noise balance.<br>
+• Sustained but moderated activation.<br><br>
+Organized clarity without dulling.`,
+
+    focus: `• Stronger attentional gating.<br>
+• Fewer task-switch impulses.<br>
+• More stable step sequencing.<br>
+• Less irrelevant internal noise.<br><br>
+Structured control.`,
+
+    study: `• Sustained attention at moderate activation.<br>
+• Less context shifting.<br>
+• Steadier working memory.<br>
+• Lower impulsive interruption.<br><br>
+Endurance focus.`,
+
+    conv: `• External speech becomes primary.<br>
+• Less overlap of inner/outer speech streams.<br>
+• Better auditory working memory.<br>
+• Less interruptive drive.<br><br>
+Conversation alignment.`,
+
+    cook: `• Practical alertness with environmental monitoring.<br>
+• Less attentional drift.<br>
+• More stable step transitions.<br>
+• Executive oversight stays online.<br><br>
+Functional alertness.`,
+
+    clean: `• Less stop-start behavior.<br>
+• Sustained motor sequencing.<br>
+• Lower avoidance signaling.<br>
+• More linear flow.<br><br>
+Momentum support.`,
+
+    sew: `• Precision stabilization.<br>
+• Less impulsive movement.<br>
+• Lower tension interference.<br>
+• Narrow, steady attention bandwidth.<br><br>
+Fine-motor support.`,
+
+    game_calm: `• Lower limbic reactivity.<br>
+• Fewer impulsive spikes.<br>
+• Stable pacing of responses.<br><br>
+Calm play.`,
+
+    game_comp: `• Increased alert network activation.<br>
+• Faster motor preparation.<br>
+• Less internal distraction.<br>
+• Controlled arousal elevation.<br><br>
+Performance support.`,
+
+    tv: `• Less spontaneous side-thought generation.<br>
+• Easier dialogue tracking.<br>
+• More stable auditory focus.<br>
+• Less over-analysis.<br><br>
+Passive clarity.`,
+
+    childCalm: `• Reduced novelty spikes.<br>
+• More stable sensory input.<br>
+• Less motor impulsivity over time.<br><br>
+Regulation support, not sedation.`,
+
+    childFocus: `• Reduced attention switching.<br>
+• Improved task persistence.<br>
+• Balanced focus-network activation.<br>
+• Less impulsive shifting.<br><br>
+Developmental support.`,
+
+    childSleep: `• Fewer abrupt auditory triggers.<br>
+• Lower startle activation.<br>
+• Reduced fragmentation triggers.<br>
+• Smoother sleep transitions.<br><br>
+Sleep continuity support.`,
+
+    infantOverride: `• Safety and stability only.<br>
+• No stimulation intent.<br>
+• Reduced sharp acoustic contrast.<br>
+• Protect auditory development.<br><br>
+Environmental safety control.`
   }
 };
 
@@ -677,12 +914,10 @@ function escapeHtml(s){
    Base ranges (final)
 ========================= */
 const BASE = {
-  // Rest & sleep
   sleep:  { color:"brown", low:100, high:700 },
   relax:  { color:"brown", low:120, high:900 },
   muscle: { color:"brown", low:130, high:750 },
 
-  // Thinking & focus
   quiet_full:  { color:"brown", low:150, high:600 },
   quiet_light: { color:"pink",  low:170, high:900 },
 
@@ -690,17 +925,14 @@ const BASE = {
   study:  { color:"pink",  low:160, high:1300 },
   conv:   { color:"pink",  low:180, high:1100 },
 
-  // Daily
   cook:   { color:"pink",  low:170, high:1700 },
   clean:  { color:"pink",  low:180, high:1800 },
   sew:    { color:"pink",  low:160, high:1300 },
 
-  // Entertainment
   game_calm: { color:"brown", low:150, high:900 },
   game_comp: { color:"pink",  low:180, high:1800 },
   tv:        { color:"pink",  low:180, high:1100 },
 
-  // Kids
   childCalm:  { color:"brown", low:150, high:700 },
   childFocus: { color:"pink",  low:170, high:1200 },
   childSleep: { color:"brown", low:120, high:600 }
@@ -792,7 +1024,7 @@ function recommend(){
 }
 
 /* =========================
-   Volume text + Notice
+   Volume text + Notice + Brain
 ========================= */
 function volumeText(rec){
   const t = I18N[state.lang];
@@ -802,12 +1034,10 @@ function volumeText(rec){
     return t.volumeByGoal.infantOverride;
   }
 
-  // base volume by goal
   const v = t.volumeByGoal[rec.goalKey] || t.volumeByGoal.focus;
 
-  // older adults: append gentle practical extra (still two lines style)
+  // older adults: add practical extra (kept light)
   if(state.age === "older"){
-    // keep sensory text, add practical extra below as a second block
     return `${v}<br><br>${t.olderExtra}`;
   }
 
@@ -820,6 +1050,17 @@ function buildNotice(){
     notices.push(I18N[state.lang].warnings.infant);
   }
   return notices;
+}
+
+function brainText(rec){
+  const key = rec.goalKey;
+
+  // if infant override is active, show infantOverride explanation
+  if(state.infantRoom === "yes" || state.age === "infant"){
+    return BRAIN[state.lang].infantOverride || "";
+  }
+
+  return (BRAIN[state.lang][key] || "");
 }
 
 /* =========================
@@ -857,6 +1098,8 @@ function renderAll(){
   $("t_adjustTitle").textContent = t.adjustTitle;
   $("outAdjust").textContent = t.adjustText;
   $("t_noticeTitle").textContent = t.noticeTitle;
+
+  $("t_brainTitle").textContent = t.brainTitle;
 
   $("t_footer").textContent = t.footer;
   $("t_creator").textContent = t.creator;
@@ -1013,8 +1256,6 @@ function renderResult(){
     return;
   }
 
-  const t = I18N[state.lang];
-
   // Color label
   const colorLabel = rec.color === "brown"
     ? (state.lang==="ar" ? "Brown (بني)" : "Brown")
@@ -1039,6 +1280,9 @@ function renderResult(){
     $("outNotice").innerHTML = "";
   }
 
+  // Brain explanation (hidden under details)
+  $("outBrain").innerHTML = brainText(rec);
+
   $("result").style.display = "flex";
 }
 
@@ -1047,13 +1291,13 @@ function renderResult(){
 ========================= */
 function persist(){
   try{
-    localStorage.setItem("noise_settings_helper_state_v3", JSON.stringify(state));
+    localStorage.setItem("noise_settings_helper_state_v4", JSON.stringify(state));
   }catch(e){}
 }
 
 function restore(){
   try{
-    const raw = localStorage.getItem("noise_settings_helper_state_v3");
+    const raw = localStorage.getItem("noise_settings_helper_state_v4");
     if(!raw) return;
     const s = JSON.parse(raw);
 
