@@ -193,7 +193,7 @@
       <div class="row">
         <div class="col">
           <label id="t_nameLabel">Name (optional)</label>
-          <input id="name" placeholder="e.g., Ali / Dalila / Noor" />
+          <input id="name" placeholder="e.g., Yalda / Ashor / Nidhal" />
           <div class="small" id="t_nameHint">Tip: add a name so this phone remembers your setup.</div>
         </div>
         <div class="col">
@@ -217,7 +217,6 @@
         </div>
       </div>
 
-      <!-- One-question setup helper -->
       <div class="quicktest" aria-label="Quick setup helper">
         <div class="qtitle" id="t_qTitle">Quick setup helper (1 question)</div>
         <div class="qtext" id="t_qText">
@@ -288,7 +287,6 @@
       </details>
     </div>
 
-    <!-- Add to Home Screen -->
     <div class="card">
       <div style="font-weight:980" id="t_a2hsTitle">Add to Home Screen</div>
       <div class="small" id="t_a2hsHint" style="margin-top:6px">Make it one-tap like an app. No login.</div>
@@ -326,6 +324,7 @@
       title: "Focus Sound Tool",
       sub: "Select your situation and get a simple sound range suggestion. Works with the Noise Generator app.",
       byline: "By Dr Ushana Yalda",
+      signature: "— Dr Ushana Yalda",
       quickStart: "Quick start: pick an activity → tap “Get my setting”.",
       nameLabel: "Name (optional)",
       nameHint: "Tip: add a name so this phone remembers your setup.",
@@ -351,7 +350,7 @@
       btnCopy: "Copy suggested range",
       footer: "General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.",
       placeholders: {
-        name: "e.g., Ali / Dalila / Noor",
+        name: "e.g., Yalda / Ashor / Nidhal",
         device: "e.g., iPhone 11 / Xiaomi / Galaxy...",
         curLow: "e.g., 120",
         curHigh: "e.g., 700"
@@ -405,6 +404,20 @@
         setGood: "Set to: Phone speaker (good / flagship).",
         setSmall: "Set to: Phone speaker (small / budget).",
         skip: "You selected headphones/earbuds — this test is not needed."
+      },
+      a2hs: {
+        title: "Add to Home Screen",
+        hint: "Make it one-tap like an app. No login.",
+        androidTitle: "Android (Chrome / Samsung Internet)",
+        android1: "Open this page in your browser.",
+        android2: "Tap the menu (⋮) or (☰).",
+        android3: "Add to Home screen",
+        android4: "Confirm. Now it appears like an app icon.",
+        iphoneTitle: "iPhone (Safari)",
+        iphone1: "Open this page in <b>Safari</b> (not inside another app).",
+        iphone2: "Tap the Share icon (□↑).",
+        iphone3: "Add to Home Screen",
+        iphone4: "Confirm. Now it’s one tap from your home screen."
       }
     },
     ar: {
@@ -412,6 +425,7 @@
       title: "أداة الصوت للتركيز",
       sub: "اختر الحالة واحصل على اقتراح بسيط لنطاق الصوت. تعمل مع تطبيق مولّد الضوضاء.",
       byline: "بواسطة د. اوشانا يلده",
+      signature: "— د. اوشانا يلده",
       quickStart: "بداية سريعة: اختر النشاط → اضغط «أعطني الإعداد».",
       nameLabel: "الاسم (اختياري)",
       nameHint: "نصيحة: اكتب اسمًا لكي يتذكر الهاتف إعدادك.",
@@ -437,7 +451,7 @@
       btnCopy: "انسخ النطاق المقترح",
       footer: "إرشادات عامة لإعدادات الصوت. إذا سبب أي إعداد انزعاجًا، خفّض الصوت أو توقف.",
       placeholders: {
-        name: "مثال: علي / دليلة / نور",
+        name: "مثال: يلده / اشور / نضال",
         device: "مثال: iPhone 11 / Xiaomi / Galaxy...",
         curLow: "مثال: 120",
         curHigh: "مثال: 700"
@@ -491,6 +505,20 @@
         setGood: "تم الضبط إلى: سماعة الهاتف (جيدة/قوية).",
         setSmall: "تم الضبط إلى: سماعة الهاتف (ضعيفة/اقتصادية).",
         skip: "أنت اخترت سماعات/إيربودز — لا تحتاج هذا الاختبار."
+      },
+      a2hs: {
+        title: "أضف إلى الشاشة الرئيسية",
+        hint: "اجعلها بنقرة واحدة مثل تطبيق. بدون تسجيل دخول.",
+        androidTitle: "أندرويد (Chrome / Samsung Internet)",
+        android1: "افتح هذه الصفحة في المتصفح.",
+        android2: "اضغط قائمة الخيارات (⋮) أو (☰).",
+        android3: "إضافة إلى الشاشة الرئيسية",
+        android4: "أكد. ستظهر أيقونة مثل تطبيق.",
+        iphoneTitle: "آيفون (Safari)",
+        iphone1: "افتح الصفحة في <b>Safari</b> (ليس داخل تطبيق آخر).",
+        iphone2: "اضغط زر المشاركة (□↑).",
+        iphone3: "إضافة إلى الشاشة الرئيسية",
+        iphone4: "أكد. تصبح بنقرة واحدة من الشاشة."
       }
     }
   };
@@ -507,54 +535,6 @@
       el.appendChild(opt);
     }
   }
-
-  // Core recommendation logic
-  const BASE = {
-    work:   { low:120, high:850, vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{
-      en:"Focus + calm. Reduce internal chatter but keep alert.",
-      ar:"تركيز وهدوء. يقلل ضجيج الأفكار مع الحفاظ على اليقظة."
-    }},
-    study:  { low:150, high:700, vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{
-      en:"Sustained focus. Slightly narrower band to stay steady.",
-      ar:"تركيز مستمر. نطاق أضيق قليلًا لثبات أفضل."
-    }},
-    picnic: { low:120, high:950, vol:{en:"Low", ar:"منخفض"}, why:{
-      en:"Soften overstimulation. Keep it gentle so you can still connect.",
-      ar:"يخفف فرط التحفيز. اجعله لطيفًا كي تبقى متصلًا بالناس."
-    }},
-    walk:   { low:130, high:900, vol:{en:"Low", ar:"منخفض"}, why:{
-      en:"Grounded + aware. Not too immersive.",
-      ar:"ثبات مع انتباه. بدون اندماج زائد."
-    }},
-    cooking:{ low:160, high:1000,vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{
-      en:"Rhythm + momentum. Helps you stay engaged without zoning out.",
-      ar:"إيقاع وحركة. يساعدك تبقى حاضر بدون تشتت."
-    }},
-    chores: { low:180, high:1100,vol:{en:"Medium", ar:"متوسط"}, why:{
-      en:"Energy + movement. A bit wider to keep momentum.",
-      ar:"طاقة وحركة. نطاق أوسع قليلًا للاستمرار."
-    }},
-    meals:  { low:140, high:800, vol:{en:"Very low", ar:"منخفض جدًا"}, why:{
-      en:"Buffer triggers. Light background only.",
-      ar:"يخفف المحفزات. خلفية خفيفة فقط."
-    }},
-    tv:     { low:200, high:650, vol:{en:"Very low", ar:"منخفض جدًا"}, why:{
-      en:"Keep dialogue clear. Light thought-softener.",
-      ar:"يحافظ على وضوح الكلام. خلفية خفيفة لتليين التفكير."
-    }},
-    sleep:  { low:90,  high:1200,vol:{en:"Low", ar:"منخفض"}, why:{
-      en:"Mask intermittent noise. Wider band for blocking.",
-      ar:"يحجب الأصوات المتقطعة. نطاق أوسع للتمويه."
-    }},
-    relax:  { low:110, high:950, vol:{en:"Low", ar:"منخفض"}, why:{
-      en:"Decompress. Gentle and supportive.",
-      ar:"تهدئة وتفريغ. لطيف ومريح."
-    }},
-    body:   { low:100, high:700, vol:{en:"Low", ar:"منخفض"}, why:{
-      en:"Less thinking, more presence. Smooth, not too wide.",
-      ar:"تفكير أقل وحضور أكثر. ناعم وليس واسعًا جدًا."
-    }}
-  };
 
   const SETUP_ADJ = {
     phone_small: { lowMin:160, lowLift:+30, highClamp:1200 },
@@ -591,7 +571,6 @@
     return { low, high, vol: base.vol[lang], why: base.why[lang] };
   }
 
-  // UI state
   let activeActivity = "work";
 
   function renderChips(){
@@ -631,7 +610,6 @@
     $("t_colorLabel").textContent = t.colorLabel;
     $("t_colorHint").textContent = t.colorHint;
 
-    // Quick question area
     $("t_qTitle").textContent = t.quickQ.title;
     $("t_qText").childNodes[0].nodeValue = t.quickQ.text + " ";
     $("t_qNote").textContent = t.quickQ.note;
@@ -657,6 +635,19 @@
     $("btnTest").textContent = t.btnTest;
     $("btnCopy").textContent = t.btnCopy;
 
+    $("t_a2hsTitle").textContent = t.a2hs.title;
+    $("t_a2hsHint").textContent = t.a2hs.hint;
+    $("t_androidTitle").textContent = t.a2hs.androidTitle;
+    $("t_android1").textContent = t.a2hs.android1;
+    $("t_android2").textContent = t.a2hs.android2;
+    $("t_android3").innerHTML = "<b>" + t.a2hs.android3 + "</b>";
+    $("t_android4").textContent = t.a2hs.android4;
+    $("t_iphoneTitle").textContent = t.a2hs.iphoneTitle;
+    $("t_iphone1").innerHTML = t.a2hs.iphone1;
+    $("t_iphone2").textContent = t.a2hs.iphone2;
+    $("t_iphone3").innerHTML = "<b>" + t.a2hs.iphone3 + "</b>";
+    $("t_iphone4").textContent = t.a2hs.iphone4;
+
     $("t_footer").textContent = t.footer;
 
     $("name").placeholder = t.placeholders.name;
@@ -664,7 +655,6 @@
     $("curLow").placeholder = t.placeholders.curLow;
     $("curHigh").placeholder = t.placeholders.curHigh;
 
-    // selects (preserve)
     const setupSel = $("setup");
     const prevSetup = setupSel.value || "phone_small";
     fillSelect(setupSel, t.setupOptions);
@@ -729,12 +719,27 @@
       : t.outBlocks.microFallback;
 
     $("outText").innerHTML = `
-  <div><span class="flag ok">${t.outBlocks.chosen}</span> <b>${activityLabel}</b> • <span class="flag">${setupLabel}</span> • <span class="flag">${colorLabel}</span></div>
-  <div style="margin-top:8px"><span class="flag ok">${t.outBlocks.goal}</span> ${s.why}</div>
-  <div style="margin-top:8px"><span class="flag warn">${t.outBlocks.micro}</span> ${microHtml}</div>
-  <div style="margin-top:8px" class="small">${t.outBlocks.rule}</div>
-  <div style="margin-top:10px" class="small"><span class="flag ok">${t.signature}</span></div>
-`;
+      <div><span class="flag ok">${t.outBlocks.chosen}</span>
+      <b>${activityLabel}</b> •
+      <span class="flag">${setupLabel}</span> •
+      <span class="flag">${colorLabel}</span></div>
+
+      <div style="margin-top:8px">
+        <span class="flag ok">${t.outBlocks.goal}</span> ${s.why}
+      </div>
+
+      <div style="margin-top:8px">
+        <span class="flag warn">${t.outBlocks.micro}</span> ${microHtml}
+      </div>
+
+      <div style="margin-top:8px" class="small">
+        ${t.outBlocks.rule}
+      </div>
+
+      <div style="margin-top:14px; text-align:right; font-weight:950;">
+        ${t.signature}
+      </div>
+    `;
 
     $("resultCard").style.display = "flex";
     $("testOut").textContent = "";
@@ -742,7 +747,6 @@
     if(autosave) autoSaveLast();
   }
 
-  // Storage (no "family")
   function profileKey(){
     const n = ($("name").value || "").trim().toLowerCase();
     return n ? ("soundtool_profile_" + n) : "soundtool_profile_default";
@@ -819,7 +823,6 @@
     alert(t.resetDone);
   }
 
-  // Quick setup helper (1 question)
   function quickSetFromAnswer(isYes){
     const t = I18N[lang];
     const currentSetup = $("setup").value;
@@ -832,16 +835,14 @@
     if(isYes){
       $("setup").value = "phone_good";
       $("qResult").innerHTML = `<span class="ok flag">${t.quickQ.setGood}</span>`;
-    }else{
+    } else {
       $("setup").value = "phone_small";
       $("qResult").innerHTML = `<span class="warn flag">${t.quickQ.setSmall}</span>`;
     }
 
-    // gentle autosave so they don't lose it
     autoSaveLast();
   }
 
-  // Analyse current settings
   function toSafeInt(v){
     if(typeof v !== "string") return NaN;
     const cleaned = v.replace(/[^\d\-]/g, "");
@@ -924,7 +925,6 @@
     }
   }
 
-  // Events + init
   $("btnSuggest").onclick = () => showSuggestion({autosave:true});
   $("btnSave").onclick = saveProfile;
   $("btnReset").onclick = resetProfile;
