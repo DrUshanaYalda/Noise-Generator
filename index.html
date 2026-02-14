@@ -6,8 +6,10 @@
   <title>Focus Sound Tool</title>
   <style>
     :root{
-      --bg:#0b0f14; --card:#111824; --muted:#9fb0c3; --text:#e7eef7;
-      --accent:#6ee7ff; --accent2:#a78bfa; --warn:#ffd166; --bad:#ff6b6b; --good:#7CFFB2;
+      --bg:#0b0f14;
+      --card:#111824;
+      --muted:#9fb0c3;
+      --text:#e7eef7;
       --border:rgba(255,255,255,.10);
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --radius:18px;
@@ -27,7 +29,6 @@
     .topbar{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
     h1{font-size:20px;margin:0}
     .sub{color:var(--muted);font-size:13px;line-height:1.35}
-    .byline{color:rgba(159,176,195,.9);font-size:12px;margin-top:6px}
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
       border:1px solid var(--border);
@@ -134,14 +135,24 @@
     summary{cursor:pointer;color:var(--text);font-weight:980}
     .small{font-size:12px;color:var(--muted);line-height:1.45}
     .flag{font-weight:980}
-    .ok{color:var(--good)}
-    .warn{color:var(--warn)}
-    .bad{color:var(--bad)}
-    .footer{
-      font-size:12px;color:rgba(159,176,195,.85);
-      text-align:center;padding:6px 8px;
-      display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+    .ok{color:#7CFFB2}
+    .warn{color:#ffd166}
+    .bad{color:#ff6b6b}
+
+    /* Quick setup helper */
+    .quicktest{
+      margin-top:12px;
+      background: rgba(17,24,36,.40);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
     }
+    .quicktest .qtitle{font-weight:980;margin-bottom:6px}
+    .quicktest .qtext{font-size:13px;color:var(--text);line-height:1.45}
+    .quicktest .qactions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .quicktest .qactions button{flex:1 1 200px}
+
+    /* Add-to-home steps */
     .steps{
       margin-top:10px;
       display:flex;flex-direction:column;gap:8px;
@@ -160,26 +171,34 @@
       font-weight:980;
       margin-top:1px;
     }
-    .quicktest{
-      margin-top:12px;
-      background: rgba(17,24,36,.40);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
+
+    /* Footer */
+    .footer{
+      font-size:12px;
+      color:rgba(159,176,195,.85);
+      text-align:center;
+      padding:6px 8px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
     }
-    .quicktest .qtitle{font-weight:980;margin-bottom:6px}
-    .quicktest .qtext{font-size:13px;color:var(--text);line-height:1.45}
-    .quicktest .qactions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .quicktest .qactions button{flex:1 1 200px}
+
+    /* Very subtle creator note: faded, not bold, no dash */
+    .creator{
+      font-size:11px;
+      opacity:.28;
+      font-weight:500;
+      letter-spacing:0;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(17,24,36,.20);
+      color: rgba(200,220,245,.75);
+    }
+
     html[dir="rtl"] .step{flex-direction:row-reverse}
     html[dir="rtl"] .quicktest .qactions{flex-direction:row-reverse}
-    /* Subtle creator signature (not an eye-catcher) */
-.sig {
-  opacity: 0.38;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0;
-}
   </style>
 </head>
 
@@ -190,7 +209,6 @@
         <div>
           <h1 id="t_title">Focus Sound Tool</h1>
           <div class="sub" id="t_sub">Select your situation and get a simple sound range suggestion. Works with the Noise Generator app.</div>
-          <div class="byline" id="t_byline">By Dr Ushana Yalda</div>
           <div class="pill" id="t_quickStart" style="margin-top:10px">Quick start: pick an activity → tap “Get my setting”.</div>
         </div>
         <button class="langbtn" id="btnLang" aria-label="Toggle language">العربية</button>
@@ -320,24 +338,21 @@
       </details>
     </div>
 
-    <!-- Footer with ALWAYS-visible name -->
     <div class="footer">
-  <span id="t_footer">General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.</span>
-  <span id="t_footerName" class="sig">Dr Ushana Yalda</span>
-</div>
+      <span id="t_footer">General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.</span>
+      <span id="t_creator" class="creator">Dr Ushana Yalda</span>
+    </div>
   </div>
 
 <script>
-  // -------------------------
-  // Text + translations
-  // -------------------------
+  // =========================
+  // Translations
+  // =========================
   const I18N = {
     en: {
       langBtn: "العربية",
       title: "Focus Sound Tool",
       sub: "Select your situation and get a simple sound range suggestion. Works with the Noise Generator app.",
-      byline: "By Dr Ushana Yalda",
-      signature: "— Dr Ushana Yalda",
       quickStart: "Quick start: pick an activity → tap “Get my setting”.",
       nameLabel: "Name (optional)",
       nameHint: "Tip: add a name so this phone remembers your setup.",
@@ -362,6 +377,7 @@
       btnTest: "Analyse my current",
       btnCopy: "Copy suggested range",
       footer: "General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.",
+      creator: "Dr Ushana Yalda",
       placeholders: {
         name: "e.g., Yalda / Ashor / Nidhal",
         device: "e.g., iPhone 11 / Xiaomi / Galaxy...",
@@ -437,8 +453,6 @@
       langBtn: "English",
       title: "أداة الصوت للتركيز",
       sub: "اختر الحالة واحصل على اقتراح بسيط لنطاق الصوت. تعمل مع تطبيق مولّد الضوضاء.",
-      byline: "بواسطة د. اوشانا يلده",
-      signature: "— د. اوشانا يلده",
       quickStart: "بداية سريعة: اختر النشاط → اضغط «أعطني الإعداد».",
       nameLabel: "الاسم (اختياري)",
       nameHint: "نصيحة: اكتب اسمًا لكي يتذكر الهاتف إعدادك.",
@@ -463,6 +477,7 @@
       btnTest: "حلّل إعداداتي",
       btnCopy: "انسخ النطاق المقترح",
       footer: "إرشادات عامة لإعدادات الصوت. إذا سبب أي إعداد انزعاجًا، خفّض الصوت أو توقف.",
+      creator: "د. اوشانا يلده",
       placeholders: {
         name: "مثال: يلده / اشور / نضال",
         device: "مثال: iPhone 11 / Xiaomi / Galaxy...",
@@ -536,9 +551,9 @@
     }
   };
 
-  // -------------------------
-  // Core settings (THIS WAS MISSING BEFORE)
-  // -------------------------
+  // =========================
+  // Core recommendation logic
+  // =========================
   const BASE = {
     work:   { low:120, high:850, vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{ en:"Focus + calm. Reduce internal chatter but keep alert.", ar:"تركيز وهدوء. يقلل ضجيج الأفكار مع الحفاظ على اليقظة." }},
     study:  { low:150, high:700, vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{ en:"Sustained focus. Slightly narrower band to stay steady.", ar:"تركيز مستمر. نطاق أضيق قليلًا لثبات أفضل." }},
@@ -615,6 +630,40 @@
     }
   }
 
+  function profileKey(){
+    const n = ($("name").value || "").trim().toLowerCase();
+    return n ? ("soundtool_profile_" + n) : "soundtool_profile_default";
+  }
+
+  function autoSaveLast(){
+    const data = {
+      name: $("name").value.trim(),
+      device: $("device").value.trim(),
+      setup: $("setup").value,
+      color: $("color").value,
+      activity: activeActivity,
+      lang: lang,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(profileKey(), JSON.stringify(data));
+    localStorage.setItem("soundtool_last_profile_key", profileKey());
+  }
+
+  function loadProfile(){
+    const lastKey = localStorage.getItem("soundtool_last_profile_key") || "soundtool_profile_default";
+    const raw = localStorage.getItem(lastKey);
+    if(!raw) return;
+    try{
+      const data = JSON.parse(raw);
+      $("name").value = data.name || "";
+      $("device").value = data.device || "";
+      $("setup").value = data.setup || "phone_small";
+      $("color").value = data.color || "brown";
+      activeActivity = data.activity || "work";
+      if(data.lang === "ar" || data.lang === "en") lang = data.lang;
+    }catch(e){}
+  }
+
   function applyLang(){
     const t = I18N[lang];
 
@@ -625,7 +674,6 @@
 
     $("t_title").textContent = t.title;
     $("t_sub").textContent = t.sub;
-    $("t_byline").textContent = t.byline;
     $("t_quickStart").textContent = t.quickStart;
 
     $("t_nameLabel").textContent = t.nameLabel;
@@ -682,9 +730,8 @@
     $("curLow").placeholder = t.placeholders.curLow;
     $("curHigh").placeholder = t.placeholders.curHigh;
 
-    // Footer text + footer name ALWAYS visible
     $("t_footer").textContent = t.footer;
-    $("t_footerName").textContent = t.signature;
+    $("t_creator").textContent = t.creator;
 
     const setupSel = $("setup");
     const prevSetup = setupSel.value || "phone_small";
@@ -697,25 +744,6 @@
     colorSel.value = prevColor;
 
     renderChips();
-  }
-
-  function profileKey(){
-    const n = ($("name").value || "").trim().toLowerCase();
-    return n ? ("soundtool_profile_" + n) : "soundtool_profile_default";
-  }
-
-  function autoSaveLast(){
-    const data = {
-      name: $("name").value.trim(),
-      device: $("device").value.trim(),
-      setup: $("setup").value,
-      color: $("color").value,
-      activity: activeActivity,
-      lang: lang,
-      savedAt: new Date().toISOString()
-    };
-    localStorage.setItem(profileKey(), JSON.stringify(data));
-    localStorage.setItem("soundtool_last_profile_key", profileKey());
   }
 
   function showSuggestion(){
@@ -785,37 +813,16 @@
       <div style="margin-top:8px" class="small">
         ${t.outBlocks.rule}
       </div>
-
-      <div style="margin-top:14px; text-align:right; font-weight:950;">
-        ${t.signature}
-      </div>
     `;
 
     $("resultCard").style.display = "flex";
     $("testOut").textContent = "";
-
     autoSaveLast();
   }
 
   function saveProfile(){
-    const t = I18N[lang];
     autoSaveLast();
-    alert(t.savedMsg);
-  }
-
-  function loadProfile(){
-    const lastKey = localStorage.getItem("soundtool_last_profile_key") || "soundtool_profile_default";
-    const raw = localStorage.getItem(lastKey);
-    if(!raw) return;
-    try{
-      const data = JSON.parse(raw);
-      $("name").value = data.name || "";
-      $("device").value = data.device || "";
-      $("setup").value = data.setup || "phone_small";
-      $("color").value = data.color || "brown";
-      activeActivity = data.activity || "work";
-      if(data.lang === "ar" || data.lang === "en") lang = data.lang;
-    }catch(e){}
+    alert(I18N[lang].savedMsg);
   }
 
   function resetProfile(){
@@ -886,16 +893,6 @@
     }
 
     const bandwidth = hi - lo;
-    const notes = [];
-    const setupId = $("setup").value;
-
-    if(setupId === "phone_small" && lo < 150){
-      notes.push(lang==="ar"
-        ? `<span class="warn flag">Low cut منخفض جدًا</span> لسماعة هاتف ضعيفة → قد تسمع اهتزاز أو “لا فرق”. جرّب <b>${Math.max(160, lo+20)} Hz</b> أو استخدم المقترح <b>${s.low} Hz</b>.`
-        : `<span class="warn flag">Low cut too low</span> for a small phone speaker → rumble or “no effect”. Try <b>${Math.max(160, lo+20)} Hz</b> or use <b>${s.low} Hz</b>.`
-      );
-    }
-
     $("testOut").innerHTML =
       `<div class="small">• ${lang==="ar" ? "المقترح" : "Suggested"}: <b>${s.low}–${s.high} Hz</b> • ${lang==="ar" ? "إعدادك" : "You"}: <b>${lo}–${hi} Hz</b> • BW: <b>${bandwidth} Hz</b></div>`;
   }
