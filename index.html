@@ -173,6 +173,13 @@
     .quicktest .qactions button{flex:1 1 200px}
     html[dir="rtl"] .step{flex-direction:row-reverse}
     html[dir="rtl"] .quicktest .qactions{flex-direction:row-reverse}
+    /* Subtle creator signature (not an eye-catcher) */
+.sig {
+  opacity: 0.38;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0;
+}
   </style>
 </head>
 
@@ -315,9 +322,9 @@
 
     <!-- Footer with ALWAYS-visible name -->
     <div class="footer">
-      <span id="t_footer">General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.</span>
-      <span id="t_footerName" style="font-weight:950;">— Dr Ushana Yalda</span>
-    </div>
+  <span id="t_footer">General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.</span>
+  <span id="t_footerName" class="sig">Dr Ushana Yalda</span>
+</div>
   </div>
 
 <script>
