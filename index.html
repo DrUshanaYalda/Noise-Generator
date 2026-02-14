@@ -140,6 +140,7 @@
     .footer{
       font-size:12px;color:rgba(159,176,195,.85);
       text-align:center;padding:6px 8px;
+      display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
     }
     .steps{
       margin-top:10px;
@@ -312,12 +313,17 @@
       </details>
     </div>
 
-    <div class="footer" id="t_footer">
-      General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.
+    <!-- Footer with ALWAYS-visible name -->
+    <div class="footer">
+      <span id="t_footer">General guidance for sound settings. If anything feels uncomfortable, lower volume or stop.</span>
+      <span id="t_footerName" style="font-weight:950;">— Dr Ushana Yalda</span>
     </div>
   </div>
 
 <script>
+  // -------------------------
+  // Text + translations
+  // -------------------------
   const I18N = {
     en: {
       langBtn: "العربية",
@@ -523,7 +529,33 @@
     }
   };
 
+  // -------------------------
+  // Core settings (THIS WAS MISSING BEFORE)
+  // -------------------------
+  const BASE = {
+    work:   { low:120, high:850, vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{ en:"Focus + calm. Reduce internal chatter but keep alert.", ar:"تركيز وهدوء. يقلل ضجيج الأفكار مع الحفاظ على اليقظة." }},
+    study:  { low:150, high:700, vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{ en:"Sustained focus. Slightly narrower band to stay steady.", ar:"تركيز مستمر. نطاق أضيق قليلًا لثبات أفضل." }},
+    picnic: { low:120, high:950, vol:{en:"Low", ar:"منخفض"}, why:{ en:"Soften overstimulation. Keep it gentle so you can still connect.", ar:"يخفف فرط التحفيز. اجعله لطيفًا كي تبقى متصلًا بالناس." }},
+    walk:   { low:130, high:900, vol:{en:"Low", ar:"منخفض"}, why:{ en:"Grounded + aware. Not too immersive.", ar:"ثبات مع انتباه. بدون اندماج زائد." }},
+    cooking:{ low:160, high:1000,vol:{en:"Low–medium", ar:"منخفض–متوسط"}, why:{ en:"Rhythm + momentum. Helps you stay engaged without zoning out.", ar:"إيقاع وحركة. يساعدك تبقى حاضر بدون تشتت." }},
+    chores: { low:180, high:1100,vol:{en:"Medium", ar:"متوسط"}, why:{ en:"Energy + movement. A bit wider to keep momentum.", ar:"طاقة وحركة. نطاق أوسع قليلًا للاستمرار." }},
+    meals:  { low:140, high:800, vol:{en:"Very low", ar:"منخفض جدًا"}, why:{ en:"Buffer triggers. Light background only.", ar:"يخفف المحفزات. خلفية خفيفة فقط." }},
+    tv:     { low:200, high:650, vol:{en:"Very low", ar:"منخفض جدًا"}, why:{ en:"Keep dialogue clear. Light thought-softener.", ar:"يحافظ على وضوح الكلام. خلفية خفيفة لتليين التفكير." }},
+    sleep:  { low:90,  high:1200,vol:{en:"Low", ar:"منخفض"}, why:{ en:"Mask intermittent noise. Wider band for blocking.", ar:"يحجب الأصوات المتقطعة. نطاق أوسع للتمويه." }},
+    relax:  { low:110, high:950, vol:{en:"Low", ar:"منخفض"}, why:{ en:"Decompress. Gentle and supportive.", ar:"تهدئة وتفريغ. لطيف ومريح." }},
+    body:   { low:100, high:700, vol:{en:"Low", ar:"منخفض"}, why:{ en:"Less thinking, more presence. Smooth, not too wide.", ar:"تفكير أقل وحضور أكثر. ناعم وليس واسعًا جدًا." }}
+  };
+
+  const SETUP_ADJ = {
+    phone_small: { lowMin:160, lowLift:+30, highClamp:1200 },
+    phone_good:  { lowMin:120, lowLift:+0,  highClamp:1400 },
+    tablet:      { lowMin:110, lowLift:-10, highClamp:1600 },
+    external:    { lowMin:90,  lowLift:-20, highClamp:2000 },
+    headphones:  { lowMin:70,  lowLift:-30, highClamp:3000 }
+  };
+
   let lang = "en";
+  let activeActivity = "work";
   const $ = (id)=>document.getElementById(id);
 
   function fillSelect(el, options){
@@ -535,14 +567,6 @@
       el.appendChild(opt);
     }
   }
-
-  const SETUP_ADJ = {
-    phone_small: { lowMin:160, lowLift:+30, highClamp:1200 },
-    phone_good:  { lowMin:120, lowLift:+0,  highClamp:1400 },
-    tablet:      { lowMin:110, lowLift:-10, highClamp:1600 },
-    external:    { lowMin:90,  lowLift:-20, highClamp:2000 },
-    headphones:  { lowMin:70,  lowLift:-30, highClamp:3000 }
-  };
 
   function applyColor(high, color){
     if(color === "pink") return Math.max(450, Math.round(high * 0.9));
@@ -570,8 +594,6 @@
 
     return { low, high, vol: base.vol[lang], why: base.why[lang] };
   }
-
-  let activeActivity = "work";
 
   function renderChips(){
     const chips = $("chips");
@@ -648,12 +670,14 @@
     $("t_iphone3").innerHTML = "<b>" + t.a2hs.iphone3 + "</b>";
     $("t_iphone4").textContent = t.a2hs.iphone4;
 
-    $("t_footer").textContent = t.footer;
-
     $("name").placeholder = t.placeholders.name;
     $("device").placeholder = t.placeholders.device;
     $("curLow").placeholder = t.placeholders.curLow;
     $("curHigh").placeholder = t.placeholders.curHigh;
+
+    // Footer text + footer name ALWAYS visible
+    $("t_footer").textContent = t.footer;
+    $("t_footerName").textContent = t.signature;
 
     const setupSel = $("setup");
     const prevSetup = setupSel.value || "phone_small";
@@ -668,7 +692,26 @@
     renderChips();
   }
 
-  function showSuggestion({autosave=true} = {}){
+  function profileKey(){
+    const n = ($("name").value || "").trim().toLowerCase();
+    return n ? ("soundtool_profile_" + n) : "soundtool_profile_default";
+  }
+
+  function autoSaveLast(){
+    const data = {
+      name: $("name").value.trim(),
+      device: $("device").value.trim(),
+      setup: $("setup").value,
+      color: $("color").value,
+      activity: activeActivity,
+      lang: lang,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(profileKey(), JSON.stringify(data));
+    localStorage.setItem("soundtool_last_profile_key", profileKey());
+  }
+
+  function showSuggestion(){
     const setupId = $("setup").value;
     const color = $("color").value;
     const s = computeSuggestion(activeActivity, setupId, color);
@@ -744,42 +787,13 @@
     $("resultCard").style.display = "flex";
     $("testOut").textContent = "";
 
-    if(autosave) autoSaveLast();
-  }
-
-  function profileKey(){
-    const n = ($("name").value || "").trim().toLowerCase();
-    return n ? ("soundtool_profile_" + n) : "soundtool_profile_default";
+    autoSaveLast();
   }
 
   function saveProfile(){
     const t = I18N[lang];
-    const data = {
-      name: $("name").value.trim(),
-      device: $("device").value.trim(),
-      setup: $("setup").value,
-      color: $("color").value,
-      activity: activeActivity,
-      lang: lang,
-      savedAt: new Date().toISOString()
-    };
-    localStorage.setItem(profileKey(), JSON.stringify(data));
-    localStorage.setItem("soundtool_last_profile_key", profileKey());
+    autoSaveLast();
     alert(t.savedMsg);
-  }
-
-  function autoSaveLast(){
-    const data = {
-      name: $("name").value.trim(),
-      device: $("device").value.trim(),
-      setup: $("setup").value,
-      color: $("color").value,
-      activity: activeActivity,
-      lang: lang,
-      savedAt: new Date().toISOString()
-    };
-    localStorage.setItem(profileKey(), JSON.stringify(data));
-    localStorage.setItem("soundtool_last_profile_key", profileKey());
   }
 
   function loadProfile(){
@@ -803,7 +817,6 @@
 
     const key = profileKey();
     localStorage.removeItem(key);
-
     const lastKey = localStorage.getItem("soundtool_last_profile_key");
     if(lastKey === key) localStorage.removeItem("soundtool_last_profile_key");
 
@@ -839,7 +852,6 @@
       $("setup").value = "phone_small";
       $("qResult").innerHTML = `<span class="warn flag">${t.quickQ.setSmall}</span>`;
     }
-
     autoSaveLast();
   }
 
@@ -877,55 +889,19 @@
       );
     }
 
-    const targetBW = (function(){
-      switch(activeActivity){
-        case "study": return {min:350, max:650};
-        case "work": return {min:350, max:850};
-        case "tv": return {min:250, max:550};
-        case "sleep": return {min:700, max:1400};
-        case "meals": return {min:300, max:700};
-        case "body": return {min:350, max:750};
-        default: return {min:350, max:1100};
-      }
-    })();
-
-    if(bandwidth < targetBW.min){
-      notes.push(lang==="ar"
-        ? `<span class="warn flag">النطاق ضيق</span> (${bandwidth} Hz). وسّع النطاق (ارفع High أو اخفض Low ضمن الحدود).`
-        : `<span class="warn flag">Band too narrow</span> (${bandwidth} Hz). Widen it (raise High or lower Low safely).`
-      );
-    } else if(bandwidth > targetBW.max){
-      notes.push(lang==="ar"
-        ? `<span class="warn flag">النطاق واسع جدًا</span> (${bandwidth} Hz). ضيّقه قليلًا (غالبًا خفّض High).`
-        : `<span class="warn flag">Band very wide</span> (${bandwidth} Hz). Narrow it a bit (often lower High).`
-      );
-    } else {
-      notes.push(lang==="ar"
-        ? `<span class="ok flag">عرض النطاق مناسب</span> لهذا النشاط.`
-        : `<span class="ok flag">Band width looks reasonable</span> for this activity.`
-      );
-    }
-
-    notes.push(lang==="ar"
-      ? `المقترح: <b>${s.low}–${s.high} Hz</b>. إعدادك: <b>${lo}–${hi} Hz</b>.`
-      : `Suggested: <b>${s.low}–${s.high} Hz</b>. You: <b>${lo}–${hi} Hz</b>.`
-    );
-
-    $("testOut").innerHTML = `<div class="small">${notes.map(n=>`• ${n}`).join("<br>")}</div>`;
+    $("testOut").innerHTML =
+      `<div class="small">• ${lang==="ar" ? "المقترح" : "Suggested"}: <b>${s.low}–${s.high} Hz</b> • ${lang==="ar" ? "إعدادك" : "You"}: <b>${lo}–${hi} Hz</b> • BW: <b>${bandwidth} Hz</b></div>`;
   }
 
   async function copySuggested(){
     const s = computeSuggestion(activeActivity, $("setup").value, $("color").value);
     const txt = `${s.low}-${s.high} Hz`;
-    try{
-      await navigator.clipboard.writeText(txt);
-      alert(I18N[lang].copiedMsg(txt));
-    }catch(e){
-      alert(I18N[lang].copyFail(txt));
-    }
+    try{ await navigator.clipboard.writeText(txt); alert(I18N[lang].copiedMsg(txt)); }
+    catch(e){ alert(I18N[lang].copyFail(txt)); }
   }
 
-  $("btnSuggest").onclick = () => showSuggestion({autosave:true});
+  // Events
+  $("btnSuggest").onclick = showSuggestion;
   $("btnSave").onclick = saveProfile;
   $("btnReset").onclick = resetProfile;
   $("btnTest").onclick = analyseCurrent;
@@ -937,9 +913,10 @@
   $("btnLang").onclick = () => {
     lang = (lang === "en") ? "ar" : "en";
     applyLang();
-    if($("resultCard").style.display !== "none") showSuggestion({autosave:true});
+    if($("resultCard").style.display !== "none") showSuggestion();
   };
 
+  // Init
   applyLang();
   loadProfile();
   applyLang();
