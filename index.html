@@ -1,228 +1,1228 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Noise Settings Helper</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Noise Settings Helper</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#111824;
+      --text:#e7eef7;
+      --muted:#9fb0c3;
+      --border:rgba(255,255,255,.10);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
 
-<style>
-body{
-  font-family: Arial, sans-serif;
-  background:#0f141c;
-  color:#e6eef8;
-  padding:20px;
-  max-width:800px;
-  margin:auto;
-}
-h1{font-size:22px}
-.section{margin-bottom:20px}
-select,button{
-  width:100%;
-  padding:12px;
-  border-radius:8px;
-  border:none;
-  margin-bottom:10px;
-  font-size:15px;
-}
-button{
-  background:#4fd1c5;
-  color:#000;
-  font-weight:bold;
-  cursor:pointer;
-}
-.result{
-  background:#1a2330;
-  padding:15px;
-  border-radius:10px;
-  margin-top:20px;
-}
-.warning{
-  background:#3b2f1c;
-  color:#ffd166;
-  padding:10px;
-  border-radius:8px;
-  margin-top:10px;
-}
-.colorBox{
-  display:inline-block;
-  padding:6px 12px;
-  border-radius:6px;
-  margin-right:8px;
-}
-.brown{background:#6b4f2a;}
-.pink{background:#b34b8c;}
-</style>
+      --ok:#7CFFB2;
+      --warn:#ffd166;
+      --warnbg:rgba(255, 209, 102, 0.10);
+      --bad:#ff6b6b;
+
+      --pinkbg: rgba(217, 70, 239, 0.12);
+      --pinkbd: rgba(217, 70, 239, 0.22);
+      --brownbg: rgba(245, 158, 11, 0.12);
+      --brownbd: rgba(245, 158, 11, 0.22);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Naskh Arabic", "Noto Sans Arabic", sans-serif;
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(110,231,255,.12), transparent),
+        radial-gradient(900px 500px at 90% 10%, rgba(167,139,250,.10), transparent),
+        var(--bg);
+      color:var(--text);
+      padding:16px;
+    }
+
+    .wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+
+    header{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;
+      padding:10px 6px 0 6px;
+    }
+    h1{margin:0;font-size:20px}
+    .sub{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.4;max-width:720px}
+
+    .langbtn{
+      width:auto;padding:10px 12px;border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(17,24,36,.55);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:850;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1 1 260px;display:flex;flex-direction:column;gap:6px}
+    label{font-size:12px;color:var(--muted)}
+
+    select, button{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(17,24,36,.75);
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      font-weight:950;
+      background: linear-gradient(135deg, rgba(110,231,255,.95), rgba(167,139,250,.95));
+      color:#071018;
+    }
+    button.secondary{
+      background: rgba(17,24,36,.75);
+      border:1px solid var(--border);
+      color:var(--text);
+      font-weight:850;
+    }
+
+    /* Inline warning (fade in/out) */
+    .alert{
+      display:none;
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(17,24,36,.55);
+      color: var(--text);
+      font-size:13px;
+      line-height:1.45;
+      opacity:0;
+      transform: translateY(-4px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .alert.show{display:block;opacity:1;transform:translateY(0)}
+    .alert.warn{border-color: rgba(255,209,102,.25); background: var(--warnbg);}
+    .alert .tag{font-weight:950;color:var(--warn)}
+    .small{font-size:12px;color:var(--muted);line-height:1.45;margin-top:6px}
+
+    /* Goals accordion */
+    .accordion{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+    details{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background: rgba(17,24,36,.30);
+      padding:10px 12px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:950;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{display:none}
+
+    .optgrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .opt{
+      border:1px solid var(--border);
+      background: rgba(17,24,36,.55);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .05s ease, border-color .15s ease, background .15s ease;
+    }
+    .opt:active{transform:scale(.98)}
+    .opt.active{
+      border-color: rgba(110,231,255,.65);
+      background: rgba(110,231,255,.10);
+      box-shadow: 0 0 0 3px rgba(110,231,255,.10) inset;
+    }
+
+    .subopts{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.18);
+      background: rgba(17,24,36,.35);
+      display:none;
+    }
+    .subopts.show{display:block}
+
+    /* Result */
+    .result{display:none;flex-direction:column;gap:12px}
+    .big{display:flex;gap:10px;flex-wrap:wrap}
+    .metric{
+      flex:1 1 240px;
+      background: rgba(17,24,36,.60);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+    }
+    .metric .k{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .metric .v{font-size:18px;font-weight:950}
+
+    .swatchWrap{display:flex;align-items:center;gap:10px}
+    .swatch{
+      width:22px;height:22px;border-radius:7px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+    }
+    .swatch.brown{background: var(--brownbg); border-color: var(--brownbd);}
+    .swatch.pink{background: var(--pinkbg); border-color: var(--pinkbd);}
+
+    .box{
+      background: rgba(17,24,36,.55);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      padding:12px;
+      font-size:13px;
+      line-height:1.5;
+    }
+    .box h3{
+      margin:0 0 8px 0;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:900;
+    }
+    .box.warn{
+      border-color: rgba(255,209,102,.25);
+      background: var(--warnbg);
+    }
+    .warnTitle{color:var(--warn);font-weight:950}
+
+    /* Footer signature subtle */
+    .footer{
+      display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+      font-size:12px;color:rgba(159,176,195,.85);
+      text-align:center;padding:6px 8px;
+    }
+    .creator{
+      font-size:11px;
+      opacity:.22;
+      font-weight:500;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(17,24,36,.18);
+      color: rgba(200,220,245,.75);
+      white-space:nowrap;
+    }
+
+    html[dir="rtl"] .swatchWrap{flex-direction:row-reverse;justify-content:flex-end}
+    html[dir="rtl"] .optgrid{justify-content:flex-start}
+  </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1 id="t_title">إعدادات Noise Generator</h1>
+        <div class="sub" id="t_sub">
+          هذا الموقع يعطيك الأرقام التي تضعها في تطبيق Noise Generator.<br>
+          اختر ما تريد الآن، وستظهر لك الإعدادات المناسبة.
+        </div>
+      </div>
+      <button class="langbtn" id="btnLang">English</button>
+    </header>
 
-<h1>إعدادات Noise Generator</h1>
-<p>
-هذا الموقع يعطيك الأرقام التي تضعها في تطبيق Noise Generator.<br>
-اختر ما تريد الآن، وستظهر لك الإعدادات المناسبة.
-</p>
+    <!-- Inputs -->
+    <div class="card">
+      <div class="row">
+        <div class="col">
+          <label id="t_age">العمر؟</label>
+          <select id="age"></select>
+        </div>
 
-<div class="section">
-<label>العمر؟</label>
-<select id="age">
-  <option value="adult">بالغ</option>
-  <option value="older">كبير سن</option>
-  <option value="child">طفل</option>
-  <option value="toddler">طفل صغير</option>
-  <option value="infant">رضيع</option>
-</select>
-</div>
+        <div class="col">
+          <label id="t_device">أي جهاز ستستخدم للصوت؟</label>
+          <select id="device"></select>
+          <div class="alert" id="warnDevice"></div>
+        </div>
+      </div>
 
-<div class="section">
-<label>أي جهاز ستستخدم للصوت؟</label>
-<select id="device">
-  <option value="phone">سماعة الهاتف</option>
-  <option value="tablet">سماعة التابلت</option>
-  <option value="external">Bluetooth speaker</option>
-  <option value="headphones">AirPods / headphones</option>
-</select>
-</div>
+      <div class="row" style="margin-top:10px">
+        <div class="col">
+          <label id="t_distance">المسافة بينك وبين الجهاز؟</label>
+          <select id="distance"></select>
+          <div class="alert" id="warnDistance"></div>
+        </div>
 
-<div class="section">
-<label>المسافة بينك وبين الجهاز؟</label>
-<select id="distance">
-  <option value="near">أقل من 0.5 متر</option>
-  <option value="normal">بين 0.5 و 1.5 متر</option>
-  <option value="far">أكثر من 1.5 متر</option>
-</select>
-</div>
+        <div class="col">
+          <label id="t_convToggle">هل تريد تركيز في المحادثة وسماع الكلام بوضوح؟</label>
+          <select id="convToggle"></select>
+          <div class="small" id="t_convHint"></div>
+        </div>
+      </div>
 
-<div class="section">
-<label>هل يوجد رضيع أقل من سنة ونصف في نفس الغرفة؟</label>
-<select id="infantRoom">
-  <option value="no">لا</option>
-  <option value="yes">نعم</option>
-</select>
-</div>
+      <div class="row" style="margin-top:10px">
+        <div class="col">
+          <label id="t_sensitive">هل الصوت يضايقك أو يسبب لك انزعاج اليوم؟</label>
+          <select id="sensitive"></select>
+          <div class="alert" id="warnSensitive"></div>
+        </div>
 
-<div class="section">
-<label>اختر ما تريد الآن:</label>
-<select id="mode">
-  <option value="sleep">نوم</option>
-  <option value="relax">راحة وهدوء (Relaxation)</option>
-  <option value="muscle">راحة العضلات</option>
-  <option value="quiet">تهدئة الأفكار</option>
-  <option value="focus">تركيز في العمل</option>
-  <option value="study">دراسة</option>
-  <option value="cook">طبخ</option>
-  <option value="clean">تنظيف أو ترتيب</option>
-  <option value="sew">خياطة أو عمل يدوي</option>
-  <option value="game">ألعاب فيديو</option>
-  <option value="tv">مشاهدة تلفاز</option>
-  <option value="childCalm">تهدئة الطفل</option>
-  <option value="childFocus">مساعدة الطفل على التركيز</option>
-  <option value="childSleep">نوم الطفل</option>
-</select>
-</div>
+        <div class="col">
+          <label id="t_sleepMeds">هل تأخذ دواء يساعدك على النوم أو يجعلك تنعس؟</label>
+          <select id="sleepMeds"></select>
+          <div class="alert" id="warnMeds"></div>
+        </div>
+      </div>
 
-<button onclick="generate()">أعطني الإعدادات</button>
+      <div class="row" style="margin-top:10px">
+        <div class="col">
+          <label id="t_infantRoom">هل يوجد رضيع أقل من سنة ونصف في نفس الغرفة؟</label>
+          <select id="infantRoom"></select>
+          <div class="alert warn" id="warnInfant"></div>
+        </div>
 
-<div class="result" id="output" style="display:none;"></div>
+        <div class="col">
+          <label id="t_goalsTitle">اختر ما تريد الآن:</label>
+          <div class="accordion" id="goals"></div>
+
+          <!-- Sub-choice area (used for "تهدئة الأفكار" and "ألعاب فيديو") -->
+          <div class="subopts" id="subChoiceBox">
+            <div id="subChoiceTitle" style="font-weight:950;margin-bottom:8px"></div>
+            <div class="optgrid" id="subChoices"></div>
+          </div>
+
+          <div class="small" id="t_goalHint"></div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <div class="col"><button id="btnGet">أعطني الإعدادات</button></div>
+        <div class="col"><button class="secondary" id="btnReset">إعادة ضبط</button></div>
+      </div>
+
+      <details style="margin-top:10px">
+        <summary id="t_medNoteTitle">ملاحظة طبية (مهم)</summary>
+        <div class="small" id="t_medNoteBody" style="margin-top:8px">
+          الأمان يعتمد أساسًا على مستوى الصوت والمسافة (خصوصًا للرضّع). نطاقات التردد هنا قواعد عملية وليست وصفة طبية.
+          إذا سبب الصوت انزعاجًا، خفّض الصوت أو توقف.
+        </div>
+      </details>
+    </div>
+
+    <!-- Result -->
+    <div class="card result" id="result">
+      <div class="big">
+        <div class="metric">
+          <div class="k" id="t_outColorK">لون الصوت</div>
+          <div class="v">
+            <div class="swatchWrap">
+              <span class="swatch" id="swatch"></span>
+              <span id="outColor">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="k" id="t_outLowK">Low cut</div>
+          <div class="v" id="outLow">—</div>
+        </div>
+
+        <div class="metric">
+          <div class="k" id="t_outHighK">High cut</div>
+          <div class="v" id="outHigh">—</div>
+        </div>
+      </div>
+
+      <div class="box" id="boxVolume">
+        <h3 id="t_volumeTitle">مستوى الصوت</h3>
+        <div id="outVolume">—</div>
+      </div>
+
+      <div class="box" id="boxAdjust">
+        <h3 id="t_adjustTitle">إذا لم يناسبك:</h3>
+        <div id="outAdjust">ارفع Low cut قليلاً أو خفّض High cut.</div>
+      </div>
+
+      <div class="box warn" id="boxNotice" style="display:none">
+        <div class="warnTitle" id="t_noticeTitle">تنبيه مهم</div>
+        <div style="margin-top:6px" id="outNotice"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span id="t_footer">اجعل الصوت منخفضًا. إذا لاحظته بوضوح، غالبًا هو مرتفع.</span>
+      <span class="creator" id="t_creator">د. اوشانا يلده</span>
+    </div>
+  </div>
 
 <script>
-
-function generate(){
-
-let age = document.getElementById("age").value;
-let device = document.getElementById("device").value;
-let distance = document.getElementById("distance").value;
-let infantRoom = document.getElementById("infantRoom").value;
-let mode = document.getElementById("mode").value;
-
-let color="Brown";
-let low=150;
-let high=900;
-let volume="";
-let warning="";
-
-// === BASE RANGES ===
-
-const base = {
- sleep:        {c:"Brown", l:100, h:700},
- relax:        {c:"Brown", l:120, h:900},
- muscle:       {c:"Brown", l:130, h:750},
- quiet:        {c:"Brown", l:150, h:600},
- focus:        {c:"Pink",  l:160, h:1500},
- study:        {c:"Pink",  l:160, h:1300},
- cook:         {c:"Pink",  l:170, h:1700},
- clean:        {c:"Pink",  l:180, h:1800},
- sew:          {c:"Pink",  l:160, h:1300},
- game:         {c:"Pink",  l:180, h:1800},
- tv:           {c:"Pink",  l:180, h:1100},
- childCalm:    {c:"Brown", l:150, h:700},
- childFocus:   {c:"Pink",  l:170, h:1200},
- childSleep:   {c:"Brown", l:120, h:600}
+/* =========================
+   State
+========================= */
+const state = {
+  lang: "ar",
+  age: "adult",
+  device: "phone",
+  distance: "normal",
+  infantRoom: "no",
+  convToggle: "no",
+  sensitive: "no",
+  sleepMeds: "no",
+  goal: null,          // selected goal key
+  goalSub: null        // selected sub-choice key for certain goals
 };
 
-color = base[mode].c;
-low = base[mode].l;
-high = base[mode].h;
+/* =========================
+   i18n (final family-friendly)
+========================= */
+const I18N = {
+  ar: {
+    langBtn: "English",
+    title: "إعدادات Noise Generator",
+    sub: "هذا الموقع يعطيك الأرقام التي تضعها في تطبيق Noise Generator.<br>اختر ما تريد الآن، وستظهر لك الإعدادات المناسبة.",
+    age: "العمر؟",
+    device: "أي جهاز ستستخدم للصوت؟",
+    distance: "المسافة بينك وبين الجهاز؟",
+    infantRoom: "هل يوجد رضيع أقل من سنة ونصف في نفس الغرفة؟",
+    convToggle: "هل تريد تركيز في المحادثة وسماع الكلام بوضوح؟",
+    convHint: "إذا «نعم»، النظام يقلل تمويه الكلام.",
+    sensitive: "هل الصوت يضايقك أو يسبب لك انزعاج اليوم؟",
+    sleepMeds: "هل تأخذ دواء يساعدك على النوم أو يجعلك تنعس؟",
+    goalsTitle: "اختر ما تريد الآن:",
+    goalHint: "اختر خيار واحد فقط.",
+    get: "أعطني الإعدادات",
+    reset: "إعادة ضبط",
+    medNoteTitle: "ملاحظة طبية (مهم)",
+    medNoteBody: "الأمان يعتمد أساسًا على مستوى الصوت والمسافة (خصوصًا للرضّع). نطاقات التردد هنا قواعد عملية وليست وصفة طبية. إذا سبب الصوت انزعاجًا، خفّض الصوت أو توقف.",
+    outColorK: "لون الصوت",
+    outLowK: "Low cut",
+    outHighK: "High cut",
+    volumeTitle: "مستوى الصوت",
+    adjustTitle: "إذا لم يناسبك:",
+    adjustText: "ارفع Low cut قليلاً أو خفّض High cut.",
+    noticeTitle: "تنبيه مهم",
+    footer: "اجعل الصوت منخفضًا. إذا لاحظته بوضوح، غالبًا هو مرتفع.",
+    creator: "د. اوشانا يلده",
 
-// === DEVICE FLOOR ===
+    options: {
+      age: [
+        ["adult","بالغ"],
+        ["older","كبير سن"],
+        ["child","طفل"],
+        ["toddler","طفل صغير"],
+        ["infant","رضيع"]
+      ],
+      device: [
+        ["phone","سماعة الهاتف"],
+        ["tablet","سماعة التابلت"],
+        ["external","Bluetooth speaker"],
+        ["headphones","AirPods / Headphones"]
+      ],
+      distance: [
+        ["near","أقل من 0.5 متر"],
+        ["normal","بين 0.5 و 1.5 متر"],
+        ["far","أكثر من 1.5 متر"]
+      ],
+      yesno: [
+        ["no","لا"],
+        ["yes","نعم"]
+      ]
+    },
 
-let floor = 150;
-if(device==="tablet") floor=110;
-if(device==="external") floor=80;
-if(device==="headphones") floor=50;
+    goalSections: [
+      { key:"rest", title:"الراحة والنوم", items:[
+        {key:"sleep", label:"نوم"},
+        {key:"relax", label:"راحة وهدوء (Relaxation)"},
+        {key:"muscle", label:"راحة العضلات"}
+      ]},
+      { key:"think", title:"التفكير والتركيز", items:[
+        {key:"quiet", label:"تهدئة الأفكار"},
+        {key:"focus", label:"تركيز في العمل"},
+        {key:"study", label:"دراسة"},
+        {key:"conv", label:"تركيز في المحادثة"}
+      ]},
+      { key:"daily", title:"أنشطة يومية", items:[
+        {key:"cook", label:"طبخ"},
+        {key:"clean", label:"تنظيف أو ترتيب"},
+        {key:"sew", label:"خياطة أو عمل يدوي"}
+      ]},
+      { key:"fun", title:"نشاط وترفيه", items:[
+        {key:"game", label:"ألعاب فيديو"},
+        {key:"tv", label:"مشاهدة تلفاز"}
+      ]},
+      { key:"kids", title:"مع الأطفال", items:[
+        {key:"childCalm", label:"تهدئة الطفل"},
+        {key:"childFocus", label:"مساعدة الطفل على التركيز"},
+        {key:"childSleep", label:"نوم الطفل"}
+      ]}
+    ],
 
-if(low < floor) low = floor;
+    subChoices: {
+      quiet: {
+        title: "تهدئة الأفكار — اختر النوع:",
+        items: [
+          {key:"quiet_full", label:"هدوء كامل"},
+          {key:"quiet_light", label:"هدوء مع طاقة خفيفة"}
+        ]
+      },
+      game: {
+        title: "ألعاب فيديو — اختر النوع:",
+        items: [
+          {key:"game_calm", label:"هدوء أثناء اللعب"},
+          {key:"game_comp", label:"تركيز وتنافس"}
+        ]
+      }
+    },
 
-// === DISTANCE MODIFIER ===
-if(distance==="near") low += 20;
-if(distance==="far") high += 100;
+    warnings: {
+      headphonesDistance: "عند استخدام AirPods / Headphones، المسافة لا تغيّر النتيجة.",
+      nearSpeaker: "إذا سمعت طنين أو اهتزاز، ارفع Low cut بمقدار 20 Hz.",
+      sensitive: "إذا صار الصوت مزعج، خفّض High cut بمقدار 100 Hz.",
+      medsSleep: "إذا اخترت «نعم» هنا، هذا يؤثر فقط على وضع النوم.",
+      infant: "إذا يوجد رضيع: اجعل الصوت منخفض جداً، والجهاز على بعد 1–2 متر، ولا تستخدم AirPods للرضيع."
+    },
 
-// === INFANT OVERRIDE ===
-if(infantRoom==="yes" || age==="infant"){
- color="Brown";
- low=150;
- high=550;
- warning = `
- <div class="warning">
- تنبيه مهم:<br>
- الصوت يجب أن يكون منخفض جداً.<br>
- ضع الجهاز بعيد 1–2 متر.<br>
- لا تستخدم AirPods للرضيع.
- </div>`;
+    volumeText: {
+      sleep: "اجعله منخفض جداً. إذا لاحظته بوضوح فهو مرتفع.",
+      relax: "اجعله منخفض جداً. إذا لاحظته بوضوح فهو مرتفع.",
+      muscle: "اجعله منخفض جداً. إذا لاحظته بوضوح فهو مرتفع.",
+      quiet: "اجعله منخفض جداً. إذا لاحظته بوضوح فهو مرتفع.",
+      focusLike: "منخفض لكن مسموع. لا يغطي الأصوات.",
+      older: "ابدأ منخفض، ثم ارفعه خطوة صغيرة إذا لم تسمعه. لا تجعله قوياً أو مزعجاً.",
+      kidsCalm: "منخفض وثابت. لا ترفعه بسرعة.",
+      kidsSleep: "اجعله منخفض جداً. إذا لاحظته بوضوح فهو مرتفع.",
+      infantOverride: "منخفض جداً. ضع الجهاز على بعد 1–2 متر، ولا تستخدم AirPods للرضيع.",
+      sensitive: "اجعله أهدأ من المعتاد. إذا شعرت بانزعاج، خفّضه فوراً."
+    }
+  },
+
+  en: {
+    langBtn: "العربية",
+    title: "Noise Settings Helper",
+    sub: "This page tells you what numbers to use in the Noise Generator app.<br>Choose what you need, and the right settings will appear.",
+    age: "Age",
+    device: "Which device will play the sound?",
+    distance: "How far is the device from you?",
+    infantRoom: "Is there an infant under 1.5 years in the same room?",
+    convToggle: "Do you want clear conversation focus (hear speech clearly)?",
+    convHint: "If “Yes”, we avoid heavy masking of speech.",
+    sensitive: "Is sound bothering you today?",
+    sleepMeds: "Are you taking medicine that makes you sleepy?",
+    goalsTitle: "Choose what you need now:",
+    goalHint: "Choose one option only.",
+    get: "Get settings",
+    reset: "Reset",
+    medNoteTitle: "Medical note (important)",
+    medNoteBody: "Safety is mainly about volume and distance (especially for infants). Frequency bands here are practical starting presets, not a medical prescription. If anything feels uncomfortable, lower volume or stop.",
+    outColorK: "Color",
+    outLowK: "Low cut",
+    outHighK: "High cut",
+    volumeTitle: "Volume level",
+    adjustTitle: "If it doesn’t feel right:",
+    adjustText: "Raise Low cut slightly or lower High cut.",
+    noticeTitle: "Important notice",
+    footer: "Keep volume low. If you notice it clearly, it’s usually too loud.",
+    creator: "Dr Ushana Yalda",
+
+    options: {
+      age: [
+        ["adult","Adult"],
+        ["older","Older adult"],
+        ["child","Child"],
+        ["toddler","Toddler"],
+        ["infant","Infant"]
+      ],
+      device: [
+        ["phone","Phone speaker"],
+        ["tablet","Tablet speaker"],
+        ["external","Bluetooth speaker"],
+        ["headphones","AirPods / Headphones"]
+      ],
+      distance: [
+        ["near","Very close (under 0.5 m)"],
+        ["normal","Normal (0.5–1.5 m)"],
+        ["far","Far (over 1.5 m)"]
+      ],
+      yesno: [
+        ["no","No"],
+        ["yes","Yes"]
+      ]
+    },
+
+    goalSections: [
+      { key:"rest", title:"Rest & Sleep", items:[
+        {key:"sleep", label:"Sleep"},
+        {key:"relax", label:"Relaxation"},
+        {key:"muscle", label:"Muscle relaxation"}
+      ]},
+      { key:"think", title:"Thinking & Focus", items:[
+        {key:"quiet", label:"Quiet my thoughts"},
+        {key:"focus", label:"Focus at work"},
+        {key:"study", label:"Study"},
+        {key:"conv", label:"Focus during conversation"}
+      ]},
+      { key:"daily", title:"Daily activities", items:[
+        {key:"cook", label:"Cooking"},
+        {key:"clean", label:"Cleaning / organizing"},
+        {key:"sew", label:"Sewing / hand work"}
+      ]},
+      { key:"fun", title:"Entertainment", items:[
+        {key:"game", label:"Video games"},
+        {key:"tv", label:"Watching TV"}
+      ]},
+      { key:"kids", title:"With children", items:[
+        {key:"childCalm", label:"Calm a child"},
+        {key:"childFocus", label:"Help a child focus"},
+        {key:"childSleep", label:"Child sleep"}
+      ]}
+    ],
+
+    subChoices: {
+      quiet: {
+        title: "Quiet my thoughts — choose:",
+        items: [
+          {key:"quiet_full", label:"Full calm"},
+          {key:"quiet_light", label:"Calm with light energy"}
+        ]
+      },
+      game: {
+        title: "Video games — choose:",
+        items: [
+          {key:"game_calm", label:"Calm while playing"},
+          {key:"game_comp", label:"Competitive focus"}
+        ]
+      }
+    },
+
+    warnings: {
+      headphonesDistance: "With AirPods / Headphones, distance does not change the result.",
+      nearSpeaker: "If you hear buzzing/rumble, raise Low cut by 20 Hz.",
+      sensitive: "If sound feels annoying, lower High cut by 100 Hz.",
+      medsSleep: "This affects Sleep mode only.",
+      infant: "If an infant is present: keep volume very low, place device 1–2 m away, and do not use AirPods for infants."
+    },
+
+    volumeText: {
+      sleep: "Very low. If you clearly notice it, it’s too loud.",
+      relax: "Very low. If you clearly notice it, it’s too loud.",
+      muscle: "Very low. If you clearly notice it, it’s too loud.",
+      quiet: "Very low. If you clearly notice it, it’s too loud.",
+      focusLike: "Low but audible. It should help, not cover other sounds.",
+      older: "Start low, then raise one small step if you can’t hear it. Don’t make it loud.",
+      kidsCalm: "Low and steady. Don’t raise it quickly.",
+      kidsSleep: "Very low. If you clearly notice it, it’s too loud.",
+      infantOverride: "Very low. Keep device 1–2 m away. Do not use AirPods for infants.",
+      sensitive: "Lower than usual. If uncomfortable, reduce immediately."
+    }
+  }
+};
+
+/* =========================
+   Helpers
+========================= */
+const $ = (id)=>document.getElementById(id);
+
+function setLang(newLang){
+  state.lang = newLang;
+  document.documentElement.lang = (newLang === "ar" ? "ar" : "en");
+  document.documentElement.dir  = (newLang === "ar" ? "rtl" : "ltr");
+  renderAll();
+  persist();
 }
 
-// === VOLUME TEXT ===
-if(mode==="sleep" || mode==="childSleep"){
- volume="اجعل الصوت منخفض جداً. إذا لاحظته بوضوح فهو مرتفع.";
-}
-else if(mode==="childCalm"){
- volume="منخفض وثابت. لا ترفعه بسرعة.";
-}
-else{
- volume="منخفض لكن مسموع. لا يغطي الأصوات.";
-}
-
-// === OUTPUT ===
-let colorClass = (color==="Brown")?"brown":"pink";
-
-document.getElementById("output").style.display="block";
-document.getElementById("output").innerHTML = `
-<h3>الإعدادات التي تضعها في التطبيق:</h3>
-<p><span class="colorBox ${colorClass}"></span> لون الصوت: ${color}</p>
-<p>Low cut: ${low} Hz</p>
-<p>High cut: ${high} Hz</p>
-
-<h4>مستوى الصوت</h4>
-<p>${volume}</p>
-
-<h4>إذا لم يناسبك:</h4>
-<p>ارفع Low cut قليلاً أو خفّض High cut.</p>
-
-${warning}
-`;
-
+function fillSelect(el, options, value){
+  el.innerHTML = "";
+  for(const [v, t] of options){
+    const o = document.createElement("option");
+    o.value = v; o.textContent = t;
+    el.appendChild(o);
+  }
+  el.value = value;
 }
 
+function showAlert(el, text, kind="warn"){
+  el.classList.add(kind);
+  el.innerHTML = `<span class="tag">${(state.lang==="ar" ? "تنبيه:" : "Note:")}</span> ${escapeHtml(text)}`;
+  el.classList.add("show");
+}
+function hideAlert(el){
+  el.classList.remove("show","warn","bad");
+  el.innerHTML = "";
+}
+
+function escapeHtml(s){
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+
+/* =========================
+   Goal mapping & base ranges
+   (BASE ranges before device/age/sensitivity modifiers)
+========================= */
+
+// Color names are internal; displayed via i18n.
+const BASE = {
+  // Rest & sleep
+  sleep:  { color:"brown", low:100, high:700 },
+  relax:  { color:"brown", low:120, high:900 },
+  muscle: { color:"brown", low:130, high:750 },
+
+  // Thinking & focus
+  quiet_full:  { color:"brown", low:150, high:600 }, // full calm
+  quiet_light: { color:"pink",  low:170, high:900 }, // calm + light energy
+
+  focus:  { color:"pink",  low:160, high:1500 },
+  study:  { color:"pink",  low:160, high:1300 },
+  conv:   { color:"pink",  low:180, high:1100 }, // conversation focus
+
+  // Daily
+  cook:   { color:"pink",  low:170, high:1700 },
+  clean:  { color:"pink",  low:180, high:1800 },
+  sew:    { color:"pink",  low:160, high:1300 },
+
+  // Entertainment
+  game_calm: { color:"brown", low:150, high:900 },
+  game_comp: { color:"pink",  low:180, high:1800 },
+  tv:        { color:"pink",  low:180, high:1100 },
+
+  // Kids
+  childCalm:  { color:"brown", low:150, high:700 },
+  childFocus: { color:"pink",  low:170, high:1200 },
+  childSleep: { color:"brown", low:120, high:600 }
+};
+
+// Device low-frequency floor (speaker constraints)
+function deviceFloor(device){
+  switch(device){
+    case "phone": return 150;
+    case "tablet": return 110;
+    case "external": return 80;
+    case "headphones": return 50;
+    default: return 150;
+  }
+}
+
+/* =========================
+   Recommendation engine (deterministic)
+========================= */
+function recommend(){
+  // Resolve final goal key (sub-choice if needed)
+  let goalKey = state.goal;
+
+  // Apply sub-choice requirements
+  if(goalKey === "quiet"){
+    goalKey = state.goalSub || "quiet_full";
+  }
+  if(goalKey === "game"){
+    goalKey = state.goalSub || "game_comp"; // default: competitive focus
+  }
+
+  // If user chose "تركيز في المحادثة" goal, force conversation mode
+  if(goalKey === "conv") {
+    // already good
+  }
+
+  // Guard: if still null
+  if(!goalKey || !BASE[goalKey]){
+    return null;
+  }
+
+  // Start from base
+  let {color, low, high} = BASE[goalKey];
+
+  // Apply device floor
+  const floor = deviceFloor(state.device);
+  low = Math.max(low, floor);
+
+  // Distance modifier (speaker only)
+  if(state.device !== "headphones"){
+    if(state.distance === "near"){
+      low = Math.max(low, floor + 20);
+    }
+    if(state.distance === "far"){
+      high = high + 100;
+    }
+  }
+
+  // Conversation clarity toggle (global)
+  // If user wants conversation clarity, cap high to protect speech.
+  if(state.convToggle === "yes"){
+    high = Math.min(high, 1200);
+  }
+
+  // Sensitivity today: reduce hiss/brightness
+  if(state.sensitive === "yes"){
+    high = Math.min(high, 900);
+  }
+
+  // Sleep-meds: only affects Sleep mode (and Child sleep)
+  if(state.sleepMeds === "yes" && (goalKey === "sleep" || goalKey === "childSleep")){
+    high = Math.min(high, 700);
+  }
+
+  // Older adult smoothing
+  if(state.age === "older"){
+    high = Math.min(high, 900);
+  }
+
+  // Toddler constraints (extra gentle)
+  if(state.age === "toddler"){
+    high = Math.min(high, 700);
+    low = Math.max(low, floor);
+  }
+
+  // Child constraints (cap)
+  if(state.age === "child"){
+    high = Math.min(high, 1200);
+  }
+
+  // Infant safety override (strongest)
+  if(state.infantRoom === "yes" || state.age === "infant"){
+    color = "brown";
+    low = Math.max(150, floor);   // keep speaker-safe
+    high = 550;
+  }
+
+  // Sanity bandwidth
+  if(high - low < 300) high = low + 300;
+
+  return { goalKey, color, low, high };
+}
+
+/* =========================
+   Volume text + Notice logic
+========================= */
+function volumeText(rec){
+  const t = I18N[state.lang].volumeText;
+
+  // Infant override dominates
+  if(state.infantRoom === "yes" || state.age === "infant"){
+    return t.infantOverride;
+  }
+
+  // Sensitivity dominates
+  if(state.sensitive === "yes"){
+    return t.sensitive;
+  }
+
+  // Older adult guidance (except infant override)
+  if(state.age === "older"){
+    return t.older;
+  }
+
+  // Kids
+  if(rec.goalKey === "childCalm") return t.kidsCalm;
+  if(rec.goalKey === "childSleep") return t.kidsSleep;
+  if(rec.goalKey === "childFocus") return t.focusLike;
+
+  // Sleep-like
+  if(rec.goalKey === "sleep") return t.sleep;
+
+  // Relax / muscle / quiet share sleep-like volume instruction
+  if(rec.goalKey === "relax" || rec.goalKey === "muscle" || rec.goalKey.startsWith("quiet_")){
+    return t.quiet;
+  }
+
+  // Default focus-like
+  return t.focusLike;
+}
+
+function buildNotice(){
+  // Only show when needed
+  const notices = [];
+
+  if(state.infantRoom === "yes" || state.age === "infant"){
+    notices.push(I18N[state.lang].warnings.infant);
+  }
+
+  // Soft reminder: distance irrelevant on headphones (not a safety warning)
+  // We keep this as inline warning, not in the notice box.
+
+  return notices;
+}
+
+/* =========================
+   Rendering
+========================= */
+function renderAll(){
+  const t = I18N[state.lang];
+
+  // Header + button
+  $("btnLang").textContent = t.langBtn;
+  $("t_title").textContent = t.title;
+  $("t_sub").innerHTML = t.sub;
+
+  // Labels
+  $("t_age").textContent = t.age;
+  $("t_device").textContent = t.device;
+  $("t_distance").textContent = t.distance;
+  $("t_infantRoom").textContent = t.infantRoom;
+  $("t_convToggle").textContent = t.convToggle;
+  $("t_convHint").textContent = t.convHint;
+  $("t_sensitive").textContent = t.sensitive;
+  $("t_sleepMeds").textContent = t.sleepMeds;
+  $("t_goalsTitle").textContent = t.goalsTitle;
+  $("t_goalHint").textContent = t.goalHint;
+
+  $("btnGet").textContent = t.get;
+  $("btnReset").textContent = t.reset;
+
+  $("t_medNoteTitle").textContent = t.medNoteTitle;
+  $("t_medNoteBody").textContent = t.medNoteBody;
+
+  $("t_outColorK").textContent = t.outColorK;
+  $("t_outLowK").textContent = t.outLowK;
+  $("t_outHighK").textContent = t.outHighK;
+  $("t_volumeTitle").textContent = t.volumeTitle;
+  $("t_adjustTitle").textContent = t.adjustTitle;
+  $("outAdjust").textContent = t.adjustText;
+  $("t_noticeTitle").textContent = t.noticeTitle;
+
+  $("t_footer").textContent = t.footer;
+  $("t_creator").textContent = t.creator;
+
+  // Selects
+  fillSelect($("age"), t.options.age, state.age);
+  fillSelect($("device"), t.options.device, state.device);
+  fillSelect($("distance"), t.options.distance, state.distance);
+  fillSelect($("infantRoom"), t.options.yesno, state.infantRoom);
+  fillSelect($("convToggle"), t.options.yesno, state.convToggle);
+  fillSelect($("sensitive"), t.options.yesno, state.sensitive);
+  fillSelect($("sleepMeds"), t.options.yesno, state.sleepMeds);
+
+  // Goals accordion
+  renderGoals();
+
+  // Warnings refresh
+  refreshInlineWarnings();
+
+  // If results currently shown, refresh them
+  if($("result").style.display === "flex"){
+    renderResult();
+  }
+}
+
+function renderGoals(){
+  const t = I18N[state.lang];
+  const container = $("goals");
+  container.innerHTML = "";
+
+  // Only one section open at a time (accordion)
+  t.goalSections.forEach((sec, idx) => {
+    const det = document.createElement("details");
+    det.dataset.key = sec.key;
+
+    // preserve open state lightly: open first by default if none
+    if(!state.goal && idx === 0) det.open = true;
+
+    const sum = document.createElement("summary");
+    sum.textContent = sec.title;
+    det.appendChild(sum);
+
+    const grid = document.createElement("div");
+    grid.className = "optgrid";
+
+    sec.items.forEach(item => {
+      const b = document.createElement("div");
+      b.className = "opt" + (state.goal === item.key ? " active" : "");
+      b.textContent = item.label;
+      b.onclick = () => {
+        // set goal
+        state.goal = item.key;
+        state.goalSub = null;
+
+        // open only this section
+        closeAllDetailsExcept(det);
+
+        // show sub-choice only if needed
+        maybeShowSubChoices(item.key);
+
+        // rerender goals (active highlight)
+        renderGoals();
+
+        // hide result until user presses Get (your choice B)
+        $("result").style.display = "none";
+
+        persist();
+      };
+      grid.appendChild(b);
+    });
+
+    det.appendChild(grid);
+
+    // Ensure accordion behavior on open
+    det.addEventListener("toggle", () => {
+      if(det.open){
+        closeAllDetailsExcept(det);
+      }
+    });
+
+    container.appendChild(det);
+  });
+
+  // keep sub-choice visible if already selected a goal needing it
+  maybeShowSubChoices(state.goal);
+}
+
+function closeAllDetailsExcept(openDet){
+  const all = $("goals").querySelectorAll("details");
+  all.forEach(d => { if(d !== openDet) d.open = false; });
+}
+
+function maybeShowSubChoices(goalKey){
+  const t = I18N[state.lang];
+  const box = $("subChoiceBox");
+  const title = $("subChoiceTitle");
+  const list = $("subChoices");
+
+  if(goalKey !== "quiet" && goalKey !== "game"){
+    box.classList.remove("show");
+    title.textContent = "";
+    list.innerHTML = "";
+    return;
+  }
+
+  const cfg = t.subChoices[goalKey];
+  title.textContent = cfg.title;
+  list.innerHTML = "";
+
+  cfg.items.forEach(it => {
+    const b = document.createElement("div");
+    const active = (state.goalSub === it.key) || (!state.goalSub && cfg.items[0].key === it.key);
+    b.className = "opt" + (active ? " active" : "");
+    b.textContent = it.label;
+    b.onclick = () => {
+      state.goalSub = it.key;
+      // re-render subchoice highlight
+      maybeShowSubChoices(goalKey);
+      // hide result until Get
+      $("result").style.display = "none";
+      persist();
+    };
+    list.appendChild(b);
+  });
+
+  // default selection if none chosen yet
+  if(!state.goalSub){
+    state.goalSub = cfg.items[0].key;
+  }
+
+  box.classList.add("show");
+}
+
+/* =========================
+   Inline warnings (fade; disappear on change)
+========================= */
+function refreshInlineWarnings(){
+  const t = I18N[state.lang];
+
+  // Device warning: headphones => distance irrelevant
+  if(state.device === "headphones"){
+    showAlert($("warnDevice"), t.warnings.headphonesDistance, "warn");
+  } else {
+    hideAlert($("warnDevice"));
+  }
+
+  // Distance warning: near speakers (buzz/rumble)
+  if(state.device !== "headphones" && state.distance === "near"){
+    showAlert($("warnDistance"), t.warnings.nearSpeaker, "warn");
+  } else {
+    hideAlert($("warnDistance"));
+  }
+
+  // Sensitive warning
+  if(state.sensitive === "yes"){
+    showAlert($("warnSensitive"), t.warnings.sensitive, "warn");
+  } else {
+    hideAlert($("warnSensitive"));
+  }
+
+  // Meds note (non-blocking)
+  if(state.sleepMeds === "yes"){
+    showAlert($("warnMeds"), t.warnings.medsSleep, "warn");
+  } else {
+    hideAlert($("warnMeds"));
+  }
+
+  // Infant warning (strong but calm)
+  if(state.infantRoom === "yes" || state.age === "infant"){
+    $("warnInfant").classList.add("show");
+    $("warnInfant").innerHTML = `<span class="tag">${state.lang==="ar" ? "تنبيه:" : "Note:"}</span> ${escapeHtml(t.warnings.infant)}`;
+  } else {
+    hideAlert($("warnInfant"));
+  }
+}
+
+/* =========================
+   Result rendering
+========================= */
+function renderResult(){
+  const t = I18N[state.lang];
+
+  const rec = recommend();
+  if(!rec){
+    // Nothing chosen
+    $("result").style.display = "none";
+    return;
+  }
+
+  // Color label
+  let colorLabel = rec.color === "brown"
+    ? (state.lang==="ar" ? "Brown (بني)" : "Brown")
+    : (state.lang==="ar" ? "Pink (وردي)" : "Pink");
+
+  $("outColor").textContent = colorLabel;
+  $("outLow").textContent = `${rec.low} Hz`;
+  $("outHigh").textContent = `${rec.high} Hz`;
+
+  // Swatch
+  const sw = $("swatch");
+  sw.classList.remove("brown","pink");
+  sw.classList.add(rec.color);
+
+  // Volume box
+  $("outVolume").textContent = volumeText(rec);
+
+  // Notice box
+  const notices = buildNotice();
+  if(notices.length){
+    $("boxNotice").style.display = "block";
+    $("outNotice").innerHTML = notices.map(n => `• ${escapeHtml(n)}`).join("<br>");
+  }else{
+    $("boxNotice").style.display = "none";
+    $("outNotice").innerHTML = "";
+  }
+
+  $("result").style.display = "flex";
+}
+
+/* =========================
+   Persistence
+========================= */
+function persist(){
+  try{
+    localStorage.setItem("noise_settings_helper_state_v2", JSON.stringify(state));
+  }catch(e){}
+}
+
+function restore(){
+  try{
+    const raw = localStorage.getItem("noise_settings_helper_state_v2");
+    if(!raw) return;
+    const s = JSON.parse(raw);
+
+    // Minimal validation
+    if(s.lang === "ar" || s.lang === "en") state.lang = s.lang;
+    if(typeof s.age === "string") state.age = s.age;
+    if(typeof s.device === "string") state.device = s.device;
+    if(typeof s.distance === "string") state.distance = s.distance;
+    if(typeof s.infantRoom === "string") state.infantRoom = s.infantRoom;
+    if(typeof s.convToggle === "string") state.convToggle = s.convToggle;
+    if(typeof s.sensitive === "string") state.sensitive = s.sensitive;
+    if(typeof s.sleepMeds === "string") state.sleepMeds = s.sleepMeds;
+    if(typeof s.goal === "string") state.goal = s.goal;
+    if(typeof s.goalSub === "string") state.goalSub = s.goalSub;
+  }catch(e){}
+}
+
+/* =========================
+   Events
+========================= */
+function wire(){
+  $("btnLang").onclick = () => {
+    setLang(state.lang === "ar" ? "en" : "ar");
+  };
+
+  $("age").onchange = (e) => {
+    state.age = e.target.value;
+    refreshInlineWarnings();
+    $("result").style.display = "none";
+    persist();
+  };
+
+  $("device").onchange = (e) => {
+    state.device = e.target.value;
+    refreshInlineWarnings();
+    $("result").style.display = "none";
+    persist();
+  };
+
+  $("distance").onchange = (e) => {
+    state.distance = e.target.value;
+    refreshInlineWarnings();
+    $("result").style.display = "none";
+    persist();
+  };
+
+  $("infantRoom").onchange = (e) => {
+    state.infantRoom = e.target.value;
+    refreshInlineWarnings();
+    $("result").style.display = "none";
+    persist();
+  };
+
+  $("convToggle").onchange = (e) => {
+    state.convToggle = e.target.value;
+    $("result").style.display = "none";
+    persist();
+  };
+
+  $("sensitive").onchange = (e) => {
+    state.sensitive = e.target.value;
+    refreshInlineWarnings();
+    $("result").style.display = "none";
+    persist();
+  };
+
+  $("sleepMeds").onchange = (e) => {
+    state.sleepMeds = e.target.value;
+    refreshInlineWarnings();
+    $("result").style.display = "none";
+    persist();
+  };
+
+  $("btnGet").onclick = () => {
+    renderResult();
+    persist();
+  };
+
+  $("btnReset").onclick = () => {
+    // Reset state (keep language)
+    const keepLang = state.lang;
+    Object.assign(state, {
+      lang: keepLang,
+      age: "adult",
+      device: "phone",
+      distance: "normal",
+      infantRoom: "no",
+      convToggle: "no",
+      sensitive: "no",
+      sleepMeds: "no",
+      goal: null,
+      goalSub: null
+    });
+    $("result").style.display = "none";
+    renderAll();
+    persist();
+  };
+}
+
+/* =========================
+   Init
+========================= */
+(function init(){
+  restore();
+  document.documentElement.lang = (state.lang==="ar" ? "ar" : "en");
+  document.documentElement.dir  = (state.lang==="ar" ? "rtl" : "ltr");
+  wire();
+  renderAll();
+})();
 </script>
-
 </body>
 </html>
